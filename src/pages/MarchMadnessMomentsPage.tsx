@@ -3,10 +3,11 @@ import CreativeChannelSection from "../components/sections/CreativeChannelSectio
 import FanCloudComparisonSection from "../components/sections/FanCloudComparisonSection";
 import HeroSection from "../components/sections/HeroSection";
 import HowItWorksSection from "../components/sections/HowItWorksSection";
+import ScrollHowItWorksSection from "../components/sections/ScrollHowItWorksSection";
 import MomentsSection from "../components/sections/MomentsSection";
 import SectionNav from "../components/nav/SectionNav";
 import ProofBand from "../components/sections/ProofBand";
-import { Reveal } from "../components/motion/MotionPrimitives";
+import ContactCtaSection from "../components/sections/ContactCtaSection";
 import { marchMadnessMomentsContent as content } from "../content/marchMadnessMoments";
 
 function MarchMadnessMomentsPage() {
@@ -17,20 +18,7 @@ function MarchMadnessMomentsPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
           <SectionNav />
           <FanCloudComparisonSection {...content.fanCloudComparison} />
-          <Reveal
-            as="section"
-            className="px-1 py-2 md:py-3"
-          >
-            <div className="max-w-[700px]">
-              <h2 className="text-3xl font-semibold tracking-tight text-slate-900 md:text-4xl">
-                {content.campaignIntro.title}
-              </h2>
-              <p className="mt-4 text-base leading-relaxed text-slate-600 md:text-lg">
-                {content.campaignIntro.subtitle}
-              </p>
-            </div>
-          </Reveal>
-          <ProofBand {...content.proof} />
+          <ScrollHowItWorksSection />
           <HowItWorksSection {...content.howItWorks} />
           <MomentsSection
             header={content.moments.header}
@@ -40,8 +28,10 @@ function MarchMadnessMomentsPage() {
           />
           <AudiencesSection {...content.audiences} />
           <CreativeChannelSection {...content.creativeAndChannel} />
+          <ProofBand {...content.proof} />
         </div>
       </div>
+      <ContactCtaSection />
     </main>
   );
 }

@@ -3,7 +3,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useReducedMotionSafe } from "../motion/MotionPrimitives";
 
 type MomentDetails = {
-  trigger: string;
+  signal: string;
+  emotion: string;
   description: string;
 };
 
@@ -119,7 +120,8 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
             const isOpen = mobileOpenId === label;
             const panelId = `mobile-moment-panel-${index}`;
             const details = detailsByLabel[label] ?? {
-              trigger: "Moment trigger details for this selection.",
+              signal: "Moment signal details for this selection.",
+              emotion: "Moment emotion details for this selection.",
               description:
                 "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
             };
@@ -163,8 +165,12 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
                     >
                       <div className="space-y-2 px-5 pb-4 pt-3 text-left">
                         <p className="text-sm text-slate-900">
-                          <span className="font-medium text-slate-700">Trigger: </span>
-                          {details.trigger}
+                          <span className="font-medium text-slate-700">Signal: </span>
+                          {details.signal}
+                        </p>
+                        <p className="text-sm text-slate-900">
+                          <span className="font-medium text-slate-700">Emotion: </span>
+                          {details.emotion}
                         </p>
                         <p className="text-sm text-slate-900">
                           <span className="font-medium text-slate-700">Description: </span>
@@ -211,7 +217,8 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
                     const isOpen = mobileOpenId === label;
                     const panelId = `mobile-moment-panel-extra-${index}`;
                     const details = detailsByLabel[label] ?? {
-                      trigger: "Moment trigger details for this selection.",
+                      signal: "Moment signal details for this selection.",
+                      emotion: "Moment emotion details for this selection.",
                       description:
                         "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
                     };
@@ -255,8 +262,12 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
                             >
                               <div className="space-y-2 px-5 pb-4 pt-3 text-left">
                                 <p className="text-sm text-slate-900">
-                                  <span className="font-medium text-slate-700">Trigger: </span>
-                                  {details.trigger}
+                                  <span className="font-medium text-slate-700">Signal: </span>
+                                  {details.signal}
+                                </p>
+                                <p className="text-sm text-slate-900">
+                                  <span className="font-medium text-slate-700">Emotion: </span>
+                                  {details.emotion}
                                 </p>
                                 <p className="text-sm text-slate-900">
                                   <span className="font-medium text-slate-700">Description: </span>
@@ -283,7 +294,8 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
               const isOpen = openIdsByColumn[columnIndex] === label;
               const panelId = `moment-panel-${columnIndex}-${index}`;
               const details = detailsByLabel[label] ?? {
-                trigger: "Moment trigger details for this selection.",
+                signal: "Moment signal details for this selection.",
+                emotion: "Moment emotion details for this selection.",
                 description:
                   "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
               };
@@ -329,8 +341,12 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
                       >
                         <div className="mx-auto max-w-3xl space-y-2 px-6 pb-4 pt-3 text-left">
                           <p className="text-base text-slate-900">
-                            <span className="font-medium text-slate-700">Trigger: </span>
-                            {details.trigger}
+                            <span className="font-medium text-slate-700">Signal: </span>
+                            {details.signal}
+                          </p>
+                          <p className="text-base text-slate-900">
+                            <span className="font-medium text-slate-700">Emotion: </span>
+                            {details.emotion}
                           </p>
                           <p className="text-base text-slate-900">
                             <span className="font-medium text-slate-700">Description: </span>

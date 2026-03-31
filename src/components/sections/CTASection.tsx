@@ -24,7 +24,7 @@ function CTASection({
       <button
         type="button"
         onClick={() => setIsModalOpen(true)}
-        className="rounded-full bg-slate-900 px-8 py-3 text-base font-semibold text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-accent-500 focus-visible:ring-offset-2"
+        className="rounded-full bg-slate-900 px-[36px] py-[15px] font-heading text-[17px] font-medium leading-none text-white transition hover:bg-slate-700 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d1226] focus-visible:ring-offset-2 sm:px-12 md:py-[1.0625rem]"
       >
         {primaryButtonText}
       </button>

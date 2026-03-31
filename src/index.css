@@ -127,6 +127,11 @@ h4 {
   color: var(--gs-text);
 }
 
+.section-title-lg {
+  font-size: clamp(1.72rem, 8.2vw, 2rem);
+  line-height: 1.08;
+}
+
 .section-copy {
   @apply mt-4;
   font-size: 1rem;
@@ -135,10 +140,39 @@ h4 {
   color: var(--gs-text-muted);
 }
 
+@media (min-width: 640px) {
+  .section-title-lg {
+    font-size: 2.7rem;
+  }
+}
+
 @media (min-width: 768px) {
   .section-title {
     font-size: 1.9375rem;
   }
+
+  .section-title-lg {
+    font-size: 3.2rem;
+  }
+}
+
+.how-it-works-step-copy {
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+@media (min-width: 768px) {
+  .how-it-works-step-copy {
+    left: var(--step-pct, 50%);
+  }
+}
+
+.mobile-card-title {
+  @apply text-base;
+}
+
+.mobile-card-body {
+  @apply text-base;
 }
 
 @keyframes dropdownFadeSlideIn {

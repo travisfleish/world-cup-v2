@@ -15,7 +15,7 @@ function CreativeChannelSection({ header, paragraph, creativeViz }: CreativeChan
     <Reveal
       id="creative"
       as="section"
-      className="scroll-mt-24"
+      className="scroll-mt-24 pb-8 md:pb-10"
     >
       <h2 className="section-title">{header}</h2>
       <p className="section-copy">{paragraph}</p>

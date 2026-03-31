@@ -11,76 +11,67 @@ type MomentsSectionProps = {
 
 const highlightedPhrases = ["Genius Moments", "Fan Graph"] as const;
 const proprietaryMomentLabels = new Set<string>();
-const momentDetailsByLabel: Record<string, { trigger: string; description: string }> = {
-  "GAMEDAY LEAD UP": {
-    trigger: "Tip-off time",
+const momentDetailsByLabel: Record<string, { signal: string; emotion: string; description: string }> = {
+  "LEAD UP: TAILGATE/WATCH PARTY": {
+    signal: "Kick-off time",
+    emotion: "Anticipation",
     description:
-      "Capture peak anticipation as fans settle in to watch. This package activates 24 hours ahead of tip-off, reaching audiences the moment excitement builds. Ideal for brands looking to own the start of the experience and associate it with pre-game rituals, research, and anticipation."
+      "This package activates 24 hours ahead of kick-off, reaching audiences the moment excitement builds and last-minute preparation happens. Ideal for brands looking to own the start of the experience and associate it with pre-game rituals, research, and anticipation."
   },
-  "LATE GAME RALLY": {
-    trigger: "Trailing team closing the gap late in the game",
+  "MATCHUPS: LINEUPS AND ANTHEMS": {
+    signal: "Kick-off time",
+    emotion: "Anticipation, Pride",
     description:
-      "Activates when a trailing team starts mounting a serious late push, delivering high-attention moments filled with tension, hope, and rising excitement."
+      "Activates immediately before each match. Targets fans of participating teams and connects to the moment when national anthems are sung and lineups are announced."
   },
-  "DOWN TO THE WIRE": {
-    trigger: "Between 45% and 55% win probability within last 10 minutes",
+  "SUPERSTITION: IN-GAME RITUALS": {
+    signal: "Kick-off time and halftime; win/loss",
+    emotion: "Fear and tension",
     description:
-      "Own the most intense moments of the game. This package activates during tight contests where the outcome is uncertain, capturing peak fan attention as every possession matters."
+      "Soccer fans are very superstitious: sitting in the same spot every game, wearing the same jersey if the team keeps winning, and not moving during key moments. Targets fans of winning and losing teams."
   },
-  "BUZZER BEATER WIN": {
-    trigger: "Points scored to win in final 10 seconds",
+  "DOWN TO THE WIRE: EXTRA TIME": {
+    signal: "Between 45% and 55% win probability when extra time is announced",
+    emotion: "Fear and tension",
     description:
-      "Own the most iconic moment in sports. Activates instantly when a last-second shot wins the game, aligning brands with unforgettable, viral, highlight-worthy moments."
+      "Activates when extra time is added to a close match. It builds on a team's late-game push, delivering high-attention moments filled with tension, hope, and rising excitement."
   },
-  ADVANCEMENT: {
-    trigger: "Team wins and advances",
+  "CINDERELLA STORIES: NEW COMPETITORS": {
+    signal:
+      "Matches involving newcomer competitors (Curacao, Uzbekistan, Jordan); goals by any new competitor nation; wins by any new competitor nation",
+    emotion: "Surprise, Joy",
     description:
-      "Celebrate victory and progress. Activates when teams secure the next step in their tournament journey, reaching energized fans in moments of pride and excitement."
+      "Activates before kick-off when a new competitor nation in the World Cup is playing. Delivers on the surprise and potential of underdogs and newcomers."
   },
-  ELIMINATION: {
-    trigger: "Team loses and is eliminated",
+  "COMEBACK STORIES: RETURNING NATIONS": {
+    signal: "Matches involving Norway and Scotland, who have not been involved in decades",
+    emotion: "Trust, Pride, Surprise",
     description:
-      "Reach fans during emotional turning points as seasons come to an end. This package captures moments of reflection, loyalty, and heightened engagement following elimination games."
+      "Activates before kick-off when a returning competitor nation in the World Cup is playing. Delivers on the surprise and potential of returning nations, with a sense of belonging and achievement."
   },
-  UPSET: {
-    trigger: "Lower seed beats higher seed",
+  "ADVANCEMENT: WINNING MOMENTS": {
+    signal: "Wins throughout the tournament that result in teams advancing in the group standings",
+    emotion: "Joy and Love",
     description:
-      "Align with the thrill of the unexpected. Activates when underdogs take down favorites, generating national attention, conversation, and strong emotional reactions."
+      "Activates when teams give their fans hope and something to look forward to in the next stage of the World Cup, delivering relief and bragging rights to fans who were feeling down."
   },
-  "CINDERELLA STORY": {
-    trigger: "10 seed or lower advances",
+  "ELIMINATION: ELIMINATION": {
+    signal: "Losses during the World Cup that put teams mathematically out of contention",
+    emotion: "Disgust/Anger",
     description:
-      "Follow the magic of underdog runs. Activates as unexpected teams continue advancing, capturing widespread fan support, optimism, and tournament storytelling."
+      "Activates disgust among losing fan bases. They look for blame, changes, and most of all dread the years they will have to wait to try again."
   },
-  "SWEET 16": {
-    trigger: "Reach fans of Sweet 16 teams",
+  "SET PIECE GOALS: SCORING PLAYS": {
+    signal: "Goals scored from corner kicks and penalty kicks",
+    emotion: "Surprise, Joy",
     description:
-      "Target high-intent fans as the tournament narrows. Activates around the Sweet 16 stage when excitement intensifies and national attention grows."
+      "Activates when teams score from a set position, usually triggered by a dazzling curving shot or a well-placed pass."
   },
-  "ELITE 8": {
-    trigger: "Reach fans of Elite 8 teams",
+  "SHOOT-OUTS": {
+    signal: "Games that go to the shoot-out stage",
+    emotion: "Anticipation, Joy or Sadness depending on outcome",
     description:
-      "Engage deeply invested audiences as teams push toward the Final Four. Delivers premium reach during one of the most competitive stages of the tournament."
-  },
-  "FINAL FOUR": {
-    trigger: "Reach fans of Final Four teams",
-    description:
-      "Own the spotlight moments. Activates during the week of the Final Four when attention peaks and the stakes are highest, delivering massive engagement and national scale."
-  },
-  CHAMPIONSHIP: {
-    trigger: "Reach fans of teams in Championship game",
-    description:
-      "Align with the biggest stage. Activates around the championship matchup, capturing peak viewership, emotion, and fan attention across the entire tournament."
-  },
-  CHAMPION: {
-    trigger: "Reach fans of the winning team",
-    description:
-      "Celebrate the ultimate victory. Activates immediately after a team is crowned champion, connecting brands with fans experiencing peak pride, joy, and celebration."
-  },
-  "HERO GAME": {
-    trigger: "Double-double, triple-double, 20+ points, 10+ rebounds, 5+ threes, 3+ steals",
-    description:
-      "Align with standout player performances. Activates when athletes deliver exceptional stat lines, capturing moments of greatness, highlight-worthy plays, and fan admiration. Perfect for brands that want to associate with excellence and star power."
+      "Own the most iconic moment in sports: after two extra-time periods, games are decided with each team taking five penalty kicks. This can also lead to sudden death if teams are still tied after the initial five kicks."
   }
 };
 

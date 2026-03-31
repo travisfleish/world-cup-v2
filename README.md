@@ -1,6 +1,6 @@
-# March Madness Moments (2026)
+# World Cup Moments (2026)
 
-Single-page React + TypeScript campaign site for Genius Sports' March Madness moments concept.  
+Single-page React + TypeScript campaign site for Genius Sports' World Cup moments concept.  
 The app is built with Vite, styled with Tailwind CSS and theme tokens, and organized around one central content file.
 
 ## Tech Stack

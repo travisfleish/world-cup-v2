@@ -1,4 +1,4 @@
-# March Madness Moments - ChatGPT Project Context
+# World Cup Moments - ChatGPT Project Context
 
 This document is a complete context guide for AI assistants working on this codebase.
 Use it as the primary source of truth for architecture, data flow, behavior, styling, and editing expectations.
@@ -9,7 +9,7 @@ Use it as the primary source of truth for architecture, data flow, behavior, sty
 - Type: Single-page React + TypeScript marketing experience
 - Build tool: Vite
 - Styling: Tailwind CSS + CSS variable token layer
-- Primary purpose: Present and explain the "March Madness Moments" campaign with interactive storytelling sections
+- Primary purpose: Present and explain the "World Cup Moments" campaign with interactive storytelling sections
 - Runtime model: Fully client-side (no backend APIs in this repo)
 
 The app emphasizes:

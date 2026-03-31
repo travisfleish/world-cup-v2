@@ -11,8 +11,12 @@ const navItems = [
 ] as const;
 
 function SectionNav() {
+  // Temporarily disabled per request.
+  return null;
+
   const reducedMotion = useReducedMotionSafe();
   const [activeId, setActiveId] = useState<(typeof navItems)[number]["id"]>(navItems[0].id);
+  const [isOnHowItWorksSticky, setIsOnHowItWorksSticky] = useState(false);
 
   const sectionIds = useMemo(() => navItems.map((item) => item.id), []);
 
@@ -60,12 +64,51 @@ function SectionNav() {
     return () => observer.disconnect();
   }, [sectionIds]);
 
+  useEffect(() => {
+    const updateHowItWorksNavTheme = () => {
+      const howItWorksSection = document.getElementById("genius-how-it-works");
+      if (!howItWorksSection) {
+        setIsOnHowItWorksSticky(false);
+        return;
+      }
+
+      const rect = howItWorksSection.getBoundingClientRect();
+      const stickyNav = document.querySelector("nav.sticky.top-0.z-40");
+      const navHeight = stickyNav instanceof HTMLElement ? stickyNav.offsetHeight : 64;
+      const triggerY = navHeight + 4;
+      const isInside = rect.top <= triggerY && rect.bottom > triggerY;
+      setIsOnHowItWorksSticky(isInside);
+    };
+
+    updateHowItWorksNavTheme();
+    window.addEventListener("scroll", updateHowItWorksNavTheme, { passive: true });
+    window.addEventListener("resize", updateHowItWorksNavTheme);
+    return () => {
+      window.removeEventListener("scroll", updateHowItWorksNavTheme);
+      window.removeEventListener("resize", updateHowItWorksNavTheme);
+    };
+  }, []);
+
   return (
     <nav className="sticky top-0 z-40 hidden md:block">
-      <div className="relative left-1/2 w-screen -translate-x-1/2 bg-white/95 backdrop-blur">
-        <div className="mx-auto w-full max-w-6xl border-y border-slate-200/90 px-3 py-3 lg:px-1 lg:py-4">
+      <div
+        className={`relative left-1/2 w-screen -translate-x-1/2 backdrop-blur transition-colors duration-300 ${
+          isOnHowItWorksSticky ? "bg-[var(--color-navy)]/95" : "bg-white/95"
+        }`}
+      >
+        <div
+          className={`mx-auto w-full max-w-6xl border-y px-3 py-3 lg:px-1 lg:py-4 transition-colors duration-300 ${
+            isOnHowItWorksSticky ? "border-white/15" : "border-slate-200/90"
+          }`}
+        >
           <div className="flex items-center gap-3 lg:gap-5">
-          <p className="shrink-0 text-sm font-normal tracking-[0.01em] text-slate-700 lg:text-base">March Madness</p>
+          <p
+            className={`shrink-0 text-sm font-normal tracking-[0.01em] lg:text-base transition-colors duration-300 ${
+              isOnHowItWorksSticky ? "text-white/90" : "text-slate-700"
+            }`}
+          >
+            World Cup
+          </p>
           <ul className="flex min-w-0 flex-1 items-center gap-1.5 overflow-x-auto whitespace-nowrap [scrollbar-width:none] [&::-webkit-scrollbar]:hidden lg:gap-2">
           {navItems.map((item) => {
             const isActive = item.id === activeId;
@@ -83,9 +126,13 @@ function SectionNav() {
                     });
                   }}
                   className={`inline-flex items-center gap-1.5 whitespace-nowrap rounded-full px-2 py-1 text-sm font-normal transition lg:px-3 lg:py-1.5 lg:text-base ${
-                    isActive
-                      ? "text-slate-900"
-                      : "text-slate-500 hover:text-slate-700"
+                    isOnHowItWorksSticky
+                      ? isActive
+                        ? "text-white"
+                        : "text-white/65 hover:text-white/90"
+                      : isActive
+                        ? "text-slate-900"
+                        : "text-slate-500 hover:text-slate-700"
                   }`}
                   aria-current={isActive ? "true" : undefined}
                 >

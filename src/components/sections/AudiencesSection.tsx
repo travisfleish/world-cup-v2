@@ -5,19 +5,19 @@ import GeniusStripeRail from "../ui/GeniusStripeRail";
 type AudiencesSectionProps = {
   header: string;
   subtitle?: string;
-  leftHeader?: string;
-  leftList: string[];
-  rightHeader: string;
-  rightList: string[];
+  popularHeader?: string;
+  audienceGroups: {
+    title: string;
+    description: string;
+    audiences: string[];
+  }[];
 };
 
 function AudiencesSection({
   header,
   subtitle,
-  leftHeader,
-  leftList,
-  rightHeader,
-  rightList
+  popularHeader,
+  audienceGroups
 }: AudiencesSectionProps) {
   const reducedMotion = useReducedMotionSafe();
 
@@ -39,46 +39,42 @@ function AudiencesSection({
               {subtitle}
             </p>
           ) : null}
-          <div className="mt-2 grid gap-8 md:grid-cols-2">
-            <div className="md:-mt-2">
-              {leftHeader ? (
-                <h3 className="mb-3 text-lg font-medium text-slate-900">{leftHeader}</h3>
-              ) : null}
-              <Stagger as="ul" className="space-y-2" staggerChildren={0.06}>
-                {leftList.map((item) => (
-                  <motion.li
-                    key={item}
-                    className="flex items-start gap-3 text-slate-700"
-                    variants={{
-                      hidden: { opacity: 0, y: reducedMotion ? 0 : 8 },
-                      show: { opacity: 1, y: 0 }
-                    }}
-                    transition={{ duration: reducedMotion ? 0.18 : 0.3, ease: "easeOut" }}
-                  >
-                    <span className="mt-1.5 block h-2.5 w-2.5 shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
-                    <span>{item}</span>
-                  </motion.li>
-                ))}
-              </Stagger>
-            </div>
-            <div className="p-0 md:rounded-brand md:bg-[var(--color-snow)] md:p-6">
-              <h3 className="text-lg font-medium text-slate-900">{rightHeader}</h3>
-              <Stagger as="ul" className="mt-4 space-y-3" staggerChildren={0.06}>
-                {rightList.map((item) => (
-                  <motion.li
-                    key={item}
-                    className="flex items-start gap-3 text-slate-700"
-                    variants={{
-                      hidden: { opacity: 0, y: reducedMotion ? 0 : 8 },
-                      show: { opacity: 1, y: 0 }
-                    }}
-                    transition={{ duration: reducedMotion ? 0.18 : 0.3, ease: "easeOut" }}
-                  >
-                    <span className="mt-1.5 block h-2.5 w-2.5 shrink-0 rounded-full bg-accent-500" aria-hidden="true" />
-                    <span>{item}</span>
-                  </motion.li>
-                ))}
-              </Stagger>
+          <div className="mt-3">
+            {popularHeader ? <h3 className="mb-4 text-lg font-medium text-slate-900">{popularHeader}</h3> : null}
+            <div className="grid gap-4 md:auto-rows-fr md:grid-cols-3">
+              {audienceGroups.map((group) => (
+                <motion.div
+                  key={group.title}
+                  className="flex h-full flex-col rounded-brand bg-[var(--color-snow)] p-5"
+                  variants={{
+                    hidden: { opacity: 0, y: reducedMotion ? 0 : 8 },
+                    show: { opacity: 1, y: 0 }
+                  }}
+                  transition={{ duration: reducedMotion ? 0.18 : 0.3, ease: "easeOut" }}
+                >
+                  <h4 className="m-0 text-base font-medium text-slate-900">{group.title}</h4>
+                  <p className="mt-2 text-sm leading-[1.45] text-[var(--gs-text-muted)]">{group.description}</p>
+                  <Stagger as="ul" className="mt-4 space-y-2" staggerChildren={0.06}>
+                    {group.audiences.map((item) => (
+                      <motion.li
+                        key={item}
+                        className="flex items-start gap-3 text-slate-700"
+                        variants={{
+                          hidden: { opacity: 0, y: reducedMotion ? 0 : 8 },
+                          show: { opacity: 1, y: 0 }
+                        }}
+                        transition={{ duration: reducedMotion ? 0.18 : 0.3, ease: "easeOut" }}
+                      >
+                        <span
+                          className="mt-1.5 block h-2.5 w-2.5 shrink-0 rounded-full bg-accent-500"
+                          aria-hidden="true"
+                        />
+                        <span>{item}</span>
+                      </motion.li>
+                    ))}
+                  </Stagger>
+                </motion.div>
+              ))}
             </div>
           </div>
         </div>

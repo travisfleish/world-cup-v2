@@ -1,0 +1,69 @@
+/**
+ * Mirror of tokens/*.ts — keep hex/rgba values in sync with TypeScript source of truth.
+ */
+
+:root {
+  --color-navy: #0d1226;
+  --color-blue: #0000dc;
+  --color-purple: #4337a8;
+  --color-orange: #fa5d00;
+  --color-lightGrey: #f6f7f9;
+  --color-snow: #fafafa;
+  --color-white: #ffffff;
+
+  --color-foreground: #0d1226;
+  --color-muted: #5b6472;
+  --color-surface: #f6f7f9;
+  --color-accent: #0011e1;
+  --color-accent-hover: #131bdb;
+  --overlay-backdrop: rgba(13, 18, 38, 0.62);
+
+  --gs-bg: var(--color-white);
+  --gs-surface: var(--color-lightGrey);
+
+  --color-gs-primary-700: #0d1226;
+  --color-gs-accent-500: #0000dc;
+  --color-gs-accent-600: #0011e1;
+  --color-gs-neon: #00ffcc;
+  --color-text: #0d1226;
+  --color-text-muted: #5b6472;
+  --color-border: #e5e7eb;
+  --color-success: #17b26a;
+
+  --color-hero-bg: #0a1330;
+  --color-hero-tile: #0011e1;
+  --color-hero-tile-alt: #0014ff;
+  --color-seq-bg: #0a0a1a;
+  --color-seq-card: #12122a;
+  --color-seq-accent: #6b4eff;
+  --color-seq-label: #8b7fff;
+  /* Standardized to canonical accent */
+  --color-fan-band: var(--color-accent);
+  --color-proof-bar: var(--color-accent);
+  --color-proof-bar-alt: #1ec971;
+  --color-accordion-green: #18c971;
+  --color-modal-accent: #66d29f;
+  --color-howitworks-accent: #7dd3fc;
+  --color-genius-blue: #0011e1;
+
+  --space-1: 0.5rem;
+  --space-2: 1rem;
+  --space-3: 1.5rem;
+  --space-4: 2rem;
+  --space-5: 2.5rem;
+  --space-6: 3rem;
+
+  --radius-md: 0.5rem;
+  --radius-pill: 9999px;
+
+  --shadow-soft: 0 2px 8px rgba(0, 0, 0, 0.06);
+  --shadow-card: 0 4px 24px rgba(0, 0, 0, 0.1);
+  --shadow-card-hover: 0 15px 30px -8px rgba(0, 0, 0, 0.08);
+  --shadow-sequence: 0 8px 48px rgba(0, 0, 0, 0.32);
+  --shadow-handle: 0 2px 12px rgba(0, 0, 0, 0.24);
+  --shadow-modal-panel: 0 20px 60px rgba(2, 6, 23, 0.35);
+
+  --container-narrow: 1110px;
+  --container-default: 1280px;
+  --container-wide: 1376px;
+}

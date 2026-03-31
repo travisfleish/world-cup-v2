@@ -2,9 +2,8 @@ import { AnimatePresence, motion } from "framer-motion";
 import { useState, useEffect } from "react";
 
 interface TeamSlot {
-  seed: number;
   name: string;
-  logo: string;
+  code: string;
 }
 
 const CARD_WIDTH = 236;
@@ -15,15 +14,11 @@ const CONNECTOR_GAP = 32; // Horizontal gap for connector lines
 const STROKE_WIDTH = 2.6;
 const CONNECTOR_BASE_STROKE = "#d4c089";
 const CONNECTOR_ACCENT_STROKE = "#eab308";
-const vcuLogo = "/team_logos/VCU_Rams_logo.svg.png";
-const georgetownLogo = "/team_logos/Georgetown_Hoyas_logo.svg.png";
-const purdueLogo = "/team_logos/Purdue-Boilermakers-Logo.png";
-const saintPetersLogo = "/team_logos/Saint-Peters-Peacocks-logo.png";
 const ANIMATION_TIMINGS_MS = {
   state1: 1100,
   state2: 2200,
   state3: 3200,
-  // Fire completion after the Sweet 16 micro-animations finish.
+  // Fire completion after the Final micro-animations finish.
   complete: 5100
 } as const;
 
@@ -90,8 +85,8 @@ export function MarchMadnessBracket({
   const ROUND2_OPTICAL_OFFSET_Y = -1;
   const round2CardTop = round2Divider - ROW_HEIGHT + ROUND2_OPTICAL_OFFSET_Y;
   // Optical adjustment: heavier border + drop shadow can make true center look slightly low.
-  const SWEET16_OPTICAL_OFFSET_Y = -2;
-  const sweet16CardTop = round2Divider - ROW_HEIGHT / 2 + SWEET16_OPTICAL_OFFSET_Y;
+  const FINAL_OPTICAL_OFFSET_Y = -2;
+  const finalCardTop = round2Divider - ROW_HEIGHT / 2 + FINAL_OPTICAL_OFFSET_Y;
 
   return (
     <div className="w-full h-full flex items-center justify-center bg-transparent p-8">
@@ -100,12 +95,12 @@ export function MarchMadnessBracket({
         <div className="relative" style={{ width: `${CARD_WIDTH}px` }}>
           <div className="mb-6 flex justify-center">
             <span className="rounded-full border border-slate-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-700">
-              Round of 64
+              Quarterfinals
             </span>
           </div>
 
           <div className="relative" style={{ height: `${round1Card2Top + CARD_HEIGHT}px` }}>
-            {/* 6 (Georgetown) vs 11 (VCU) matchup */}
+            {/* 3 (Brazil) vs 14 (Mexico) matchup */}
             <div
               className="absolute left-0"
               style={{
@@ -116,19 +111,19 @@ export function MarchMadnessBracket({
             >
               <div className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm h-full flex flex-col">
                 <TeamRow
-                  team={{ seed: 6, name: "Georgetown", logo: georgetownLogo }}
+                  team={{ name: "Brazil", code: "BR" }}
                   isLoser={animationState >= 1}
                 />
                 <div className="h-px bg-gray-300 flex-shrink-0" />
                 <TeamRow
-                  team={{ seed: 11, name: "VCU", logo: vcuLogo }}
+                  team={{ name: "Mexico", code: "MX" }}
                   isWinner={animationState >= 1}
-                  isVCU={true}
+                  isMexico={true}
                 />
               </div>
             </div>
 
-            {/* 3 (Purdue) vs 14 (Saint Peter's) matchup */}
+            {/* 1 (Argentina) vs 4 (France) matchup */}
             <div
               className="absolute left-0"
               style={{
@@ -139,12 +134,12 @@ export function MarchMadnessBracket({
             >
               <div className="bg-white border border-gray-300 rounded-lg overflow-hidden shadow-sm h-full flex flex-col">
                 <TeamRow
-                  team={{ seed: 3, name: "Purdue", logo: purdueLogo }}
+                  team={{ name: "Argentina", code: "AR" }}
                   isWinner={animationState >= 2}
                 />
                 <div className="h-px bg-gray-300 flex-shrink-0" />
                 <TeamRow
-                  team={{ seed: 14, name: "Saint Peter's", logo: saintPetersLogo }}
+                  team={{ name: "France", code: "FR" }}
                   isLoser={animationState >= 2}
                 />
               </div>
@@ -159,7 +154,7 @@ export function MarchMadnessBracket({
           className="flex-shrink-0"
           style={{ marginTop: `${HEADER_OFFSET}px` }} // ✅ ONLY CHANGE
         >
-          {/* Connector from Georgetown vs VCU divider to Round 2 */}
+          {/* Connector from Brazil vs Mexico divider to Round 2 */}
           <motion.path
             d={`M 0 ${round1Card1Divider} L ${CONNECTOR_GAP / 2} ${round1Card1Divider} L ${CONNECTOR_GAP / 2} ${round2Divider} L ${CONNECTOR_GAP} ${round2Divider}`}
             stroke={CONNECTOR_BASE_STROKE}
@@ -175,7 +170,7 @@ export function MarchMadnessBracket({
             transition={{ duration: 0.52, ease: "easeOut" }}
           />
 
-          {/* Connector from Purdue vs Saint Peter's divider to Round 2 */}
+          {/* Connector from Argentina vs France divider to Round 2 */}
           <motion.path
             d={`M 0 ${round1Card2Divider} L ${CONNECTOR_GAP / 2} ${round1Card2Divider} L ${CONNECTOR_GAP / 2} ${round2Divider} L ${CONNECTOR_GAP} ${round2Divider}`}
             stroke={CONNECTOR_BASE_STROKE}
@@ -196,7 +191,7 @@ export function MarchMadnessBracket({
         <div className="relative" style={{ width: `${CARD_WIDTH}px` }}>
           <div className="mb-6 flex justify-center">
             <span className="rounded-full border border-slate-200 bg-emerald-50 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-slate-700">
-              Round of 32
+              Semifinals
             </span>
           </div>
 
@@ -220,9 +215,9 @@ export function MarchMadnessBracket({
                     transition={{ duration: 0.32, ease: "easeOut" }}
                   >
                     <TeamRow
-                      team={{ seed: 11, name: "VCU", logo: vcuLogo }}
+                      team={{ name: "Mexico", code: "MX" }}
                       isWinner={animationState >= 3}
-                      isVCU={true}
+                      isMexico={true}
                     />
                     <AnimatePresence>
                       {animationState >= 2 && (
@@ -234,7 +229,7 @@ export function MarchMadnessBracket({
                         >
                           <div className="h-px bg-gray-300 flex-shrink-0" />
                           <TeamRow
-                            team={{ seed: 3, name: "Purdue", logo: purdueLogo }}
+                            team={{ name: "Argentina", code: "AR" }}
                             isLoser={animationState >= 3}
                           />
                         </motion.div>
@@ -247,7 +242,7 @@ export function MarchMadnessBracket({
           </div>
         </div>
 
-        {/* Round 2 to Sweet 16 Connector - from Round 2 divider */}
+        {/* Round 2 to Final Connector - from Round 2 divider */}
         <svg
           width={CONNECTOR_GAP}
           height={round1Card2Top + CARD_HEIGHT}
@@ -271,11 +266,11 @@ export function MarchMadnessBracket({
           />
         </svg>
 
-        {/* Sweet 16 Column */}
+        {/* Final Column */}
         <div className="relative" style={{ width: `${CARD_WIDTH}px` }}>
           <div className="mb-6 flex justify-center">
             <span className="rounded-full border border-emerald-200 bg-emerald-100 px-3 py-1 text-[11px] font-semibold uppercase tracking-[0.12em] text-emerald-700">
-              Sweet 16
+              Final
             </span>
           </div>
 
@@ -285,7 +280,7 @@ export function MarchMadnessBracket({
                 <motion.div
                   className="absolute left-0"
                   style={{
-                    top: `${sweet16CardTop}px`,
+                    top: `${finalCardTop}px`,
                     width: `${CARD_WIDTH}px`,
                     height: `${ROW_HEIGHT}px`,
                   }}
@@ -355,23 +350,19 @@ export function MarchMadnessBracket({
                       aria-hidden="true"
                       className="h-5 w-5 opacity-90"
                     />
-                    <span>Cinderella Run</span>
+                    <span>Champion!</span>
                   </motion.div>
                   <div className="bg-white border-2 border-green-500 rounded-lg overflow-hidden shadow-[0_10px_24px_rgba(16,185,129,0.22)] h-full">
                     <div className="flex items-center justify-center gap-3 px-4 h-full bg-green-50">
-                      <div className="text-base text-gray-600 min-w-6 flex-shrink-0">11</div>
-
                       <motion.div
                         className="relative w-8 h-8 rounded-full bg-white border-2 border-yellow-400 flex items-center justify-center overflow-hidden flex-shrink-0"
                       >
-                        <img
-                          src={vcuLogo}
-                          alt="VCU"
-                          className="w-full h-full object-contain p-0.5"
-                        />
+                        <span className="text-[11px] font-semibold tracking-[0.06em] text-gray-900">
+                          MX
+                        </span>
                       </motion.div>
 
-                      <div className="text-base text-gray-800 flex-shrink-0">VCU</div>
+                      <div className="text-base text-gray-800 flex-shrink-0">Mexico</div>
 
                       <motion.div
                         initial={{ scale: 0, rotate: -180 }}
@@ -409,11 +400,11 @@ interface TeamRowProps {
   team: TeamSlot;
   isWinner?: boolean;
   isLoser?: boolean;
-  isVCU?: boolean;
+  isMexico?: boolean;
   showPulse?: boolean;
 }
 
-function TeamRow({ team, isWinner, isLoser, isVCU, showPulse }: TeamRowProps) {
+function TeamRow({ team, isWinner, isLoser, isMexico, showPulse }: TeamRowProps) {
   return (
     <motion.div
       className={`flex items-center justify-start gap-3 px-4 flex-1 ${
@@ -425,13 +416,9 @@ function TeamRow({ team, isWinner, isLoser, isVCU, showPulse }: TeamRowProps) {
       }}
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
-      <div className="text-base text-gray-500 min-w-6 flex-shrink-0">
-        {team.seed}
-      </div>
-
       <motion.div
         className={`relative w-7 h-7 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 ${
-          isVCU ? "border-2 border-yellow-400" : "border border-gray-300"
+          isMexico ? "border-2 border-yellow-400" : "border border-gray-300"
         }`}
         animate={{
           scale: showPulse ? [1, 1.15, 1] : 1,
@@ -450,11 +437,9 @@ function TeamRow({ team, isWinner, isLoser, isVCU, showPulse }: TeamRowProps) {
           repeatDelay: 0.2,
         }}
       >
-        <img
-          src={team.logo}
-          alt={team.name}
-          className="w-full h-full object-contain p-0.5"
-        />
+        <span className="text-[10px] font-semibold tracking-[0.06em] text-gray-700">
+          {team.code}
+        </span>
       </motion.div>
 
       <div className="text-sm text-gray-800 leading-tight flex-1">{team.name}</div>

@@ -20,7 +20,7 @@ function HowItWorksSection({ header, paragraph, steps }: HowItWorksSectionProps)
       className="scroll-mt-24 p-6 md:p-10"
     >
       <h2 className="section-title text-[clamp(1.25rem,6vw,1.5rem)] leading-tight md:hidden">
-        <span className="block">Your March Madness</span>
+        <span className="block">Your World Cup</span>
         <span className="block">Moments Campaign:</span>
         <span className="block">How it Works</span>
       </h2>

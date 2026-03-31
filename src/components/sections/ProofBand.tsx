@@ -1,6 +1,4 @@
-import { motion, useInView } from "framer-motion";
-import { useRef } from "react";
-import { Reveal, useReducedMotionSafe } from "../motion/MotionPrimitives";
+import { Reveal } from "../motion/MotionPrimitives";
 
 type ProofBandProps = {
   body: string;
@@ -17,142 +15,42 @@ type ProofBandProps = {
 };
 
 function ProofBand({ body, chart }: ProofBandProps) {
-  const reducedMotion = useReducedMotionSafe();
-  const chartFrameRef = useRef<HTMLDivElement | null>(null);
-  const isChartInView = useInView(chartFrameRef, { once: false, amount: 0.35 });
-  const maxBarValue = Math.max(...chart.bars.map((bar) => bar.value), 1);
-  const chartMaxHeight = 140;
-  const highlightPhrases = new Set(["Emotional engagement", "2x higher"]);
-  const bodyParts = body.split(/(Emotional engagement|2x higher)/g);
-  const renderBarLabel = (label: string) => {
-    if (label === "Following high-surprise moments") {
-      return (
-        <>
-          <span className="block">Following</span>
-          <span className="block">high-surprise</span>
-          <span className="block">moments</span>
-        </>
-      );
-    }
-
-    if (label === "Following low-surprise moments") {
-      return (
-        <>
-          <span className="block">Following</span>
-          <span className="block">low-surprise</span>
-          <span className="block">moments</span>
-        </>
-      );
-    }
-
-    return label;
-  };
+  void body;
+  void chart;
 
   return (
     <Reveal
       as="section"
       id="proof"
-      className="relative scroll-mt-24 overflow-hidden rounded-2xl bg-gs-surface px-6 py-8 md:px-8 md:py-10"
+      className="relative w-screen max-w-none [margin-left:calc(50%-50vw)] scroll-mt-24 overflow-hidden bg-white"
     >
-      <div className="pointer-events-none absolute inset-y-0 right-0 hidden lg:block lg:w-[24%] xl:w-[30%]" aria-hidden>
-        <img
-          src="/genius-assets/blue-lines.png"
-          alt=""
-          className="absolute inset-0 h-full w-full object-cover object-right opacity-90"
-        />
-        <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-gs-surface" />
-      </div>
-
-      <div className="relative z-10 grid items-center gap-8 lg:grid-cols-[minmax(0,1fr)_minmax(22rem,29rem)] lg:gap-10">
-        <div className="flex items-center lg:justify-center">
-          <p className="mx-auto max-w-[400px] text-[1.35rem] font-medium leading-tight text-slate-900 md:text-[1.8rem] md:leading-tight">
-            {bodyParts.map((part, index) =>
-              highlightPhrases.has(part) ? (
-                <strong key={`highlight-${index}`} className="font-heading font-medium">
-                  {part}
-                </strong>
-              ) : (
-                <span key={`text-${index}`}>{part}</span>
-              )
-            )}
-          </p>
-        </div>
-
-        <article
-          className="w-full max-w-[29rem] justify-self-start overflow-hidden rounded-2xl border border-white/10 bg-[#06080F] p-5 shadow-[0_12px_30px_rgba(2,6,23,0.4)] md:p-6 lg:justify-self-end"
-          style={{
-            backgroundImage:
-              "linear-gradient(135deg, rgba(255,255,255,0.07) 0%, rgba(255,255,255,0.02) 25%, rgba(255,255,255,0.02) 50%, rgba(255,255,255,0.06) 75%, rgba(255,255,255,0.02) 100%)"
-          }}
-        >
-          <div>
-            <h3 className="m-0 w-full text-xl font-medium leading-tight text-white">{chart.title}</h3>
-          </div>
-          <p className="m-0 mt-1 hidden text-sm leading-tight text-slate-300 md:block">{chart.subtitle}</p>
-
-          <div className="mt-5" ref={chartFrameRef}>
-            <div className="relative" style={{ height: `${chartMaxHeight}px` }}>
-              <motion.div
-                className="pointer-events-none absolute inset-x-0 bottom-0 h-px bg-slate-500/70"
-                initial={{ opacity: reducedMotion ? 1 : 0 }}
-                animate={{ opacity: isChartInView || reducedMotion ? 1 : 0 }}
-                transition={{ duration: reducedMotion ? 0 : 0.18, ease: "easeOut" }}
+      <div className="mx-auto w-full max-w-6xl px-5 py-12 md:px-10 md:py-16">
+        <div className="rounded-2xl border border-slate-200/70 bg-[var(--color-lightGrey)] p-5 md:p-8">
+          <div className="grid items-start gap-6 md:grid-cols-3 md:gap-0">
+            <div className="flex justify-start md:self-stretch md:items-center md:pr-6">
+              <img
+                src="/genius-assets/media-science-logo.png"
+                alt="MediaScience"
+                className="h-auto w-full max-w-[255px]"
               />
-              <div className="flex h-full items-end gap-5">
-              {chart.bars.map((bar, index) => (
-                <div key={bar.label} className="flex flex-1 items-end">
-                  <motion.div
-                    className="flex w-full items-center justify-center rounded-t-sm"
-                    initial={{ height: reducedMotion ? `${(bar.value / maxBarValue) * chartMaxHeight}px` : 0 }}
-                    animate={{
-                      height:
-                        isChartInView || reducedMotion
-                          ? `${(bar.value / maxBarValue) * chartMaxHeight}px`
-                          : 0
-                    }}
-                    transition={{
-                      duration: reducedMotion ? 0 : 0.55,
-                      ease: "easeOut",
-                      delay: reducedMotion ? 0 : 0.12 + index * 0.08
-                    }}
-                    style={{
-                      backgroundColor: bar.color
-                    }}
-                  >
-                    <motion.span
-                      className="text-3xl font-medium leading-none text-white md:text-4xl"
-                      initial={{ opacity: reducedMotion ? 1 : 0, y: reducedMotion ? 0 : 5 }}
-                      animate={{
-                        opacity: isChartInView || reducedMotion ? 1 : 0,
-                        y: reducedMotion ? 0 : isChartInView ? 0 : 5
-                      }}
-                      transition={{
-                        duration: reducedMotion ? 0 : 0.2,
-                        ease: "easeOut",
-                        delay: reducedMotion ? 0 : 0.56 + index * 0.08
-                      }}
-                    >
-                      {bar.value}%
-                    </motion.span>
-                  </motion.div>
-                </div>
-              ))}
-              </div>
             </div>
-            <div className="mt-2 grid grid-cols-2 gap-5">
-              {chart.bars.map((bar) => (
-                <p
-                  key={`${bar.label}-label`}
-                  className="text-center text-[0.7rem] font-medium leading-tight text-slate-100 md:text-sm"
-                >
-                  {renderBarLabel(bar.label)}
-                </p>
-              ))}
+
+            <div className="md:border-l md:border-slate-300 md:px-6">
+              <p className="text-[1.3rem] font-medium leading-[1.12] tracking-tight text-slate-900 md:text-[2.1rem]">
+                <span className="text-[#8DB12D]">Surprise</span>, intensity, and{" "}
+                <span className="text-[#8DB12D]">game outcome</span> meaningfully influence memory and ad effectiveness during live sports
+                viewing
+              </p>
+            </div>
+
+            <div className="md:pl-6">
+              <p className="text-[1.3rem] font-medium leading-[1.12] tracking-tight text-slate-900 md:text-[2.1rem]">
+                Brand recall was <span className="text-[#8DB12D]">2x higher</span> following moments of &lsquo;surprise&rsquo; compared
+                with &nbsp;&lsquo;expected&rsquo; moments.
+              </p>
             </div>
           </div>
-
-          <p className="mt-4 text-center text-xs font-medium text-slate-300">{chart.footnote}</p>
-        </article>
+        </div>
       </div>
     </Reveal>
   );

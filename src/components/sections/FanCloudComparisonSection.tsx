@@ -55,12 +55,10 @@ function FanCloudComparisonSection({
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showHelperHint, setShowHelperHint] = useState(true);
   const frameRef = useRef<HTMLDivElement | null>(null);
-  const imageBoxRef = useRef<HTMLDivElement | null>(null);
   const rafRef = useRef<number | null>(null);
   const nudgeRafRef = useRef<number | null>(null);
   const pendingPercentRef = useRef<number>(50);
   const activePointerIdRef = useRef<number | null>(null);
-  const [imageBoxWidthPx, setImageBoxWidthPx] = useState<number>(1200);
   const isFrameInView = useInView(frameRef, { once: false, amount: 0.35 });
   const displayedMetrics = (() => {
     if (!isMobileViewport) return metrics;
@@ -116,27 +114,6 @@ function FanCloudComparisonSection({
         window.cancelAnimationFrame(nudgeRafRef.current);
       }
     };
-  }, []);
-
-  useEffect(() => {
-    const imageBox = imageBoxRef.current;
-    if (!imageBox) return;
-
-    const updateWidth = (width: number) => {
-      const roundedWidth = Math.max(1, Math.round(width));
-      setImageBoxWidthPx(roundedWidth);
-    };
-
-    updateWidth(imageBox.getBoundingClientRect().width);
-
-    const observer = new ResizeObserver((entries) => {
-      const entry = entries[0];
-      if (!entry) return;
-      updateWidth(entry.contentRect.width);
-    });
-
-    observer.observe(imageBox);
-    return () => observer.disconnect();
   }, []);
 
   useEffect(() => {
@@ -297,6 +274,10 @@ function FanCloudComparisonSection({
   ].join(" ");
   const activeImageFilter = "saturate(1.18) brightness(1.12) contrast(1.04)";
   const inactiveImageFilter = "saturate(0.55) brightness(0.72) contrast(0.94)";
+  const leftImageScale = 0.82;
+  const leftImageTranslateY = -6;
+  const rightImageScale = 0.88;
+  const rightImageTranslateY = -4;
   const leftImageFilter = isOtherViewDominant ? inactiveImageFilter : activeImageFilter;
   const rightImageFilter = isGeniusViewDominant ? inactiveImageFilter : activeImageFilter;
 
@@ -321,9 +302,13 @@ function FanCloudComparisonSection({
               <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85 shadow-[0_14px_28px_rgba(15,23,42,0.2)] backdrop-blur-[2px]">
                 <div className="relative aspect-[16/9] w-full">
                   <img
-                    src={rightImageSrc}
+                    src={leftImageSrc}
                     alt={leftLabel}
-                    className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
+                    className="pointer-events-none absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] select-none object-contain"
+                  style={{
+                    transform: `translateY(${leftImageTranslateY}px) scale(${leftImageScale})`,
+                    transformOrigin: "center"
+                  }}
                     draggable={false}
                   />
                 </div>
@@ -332,10 +317,10 @@ function FanCloudComparisonSection({
 
             <article>
               <p className="mb-2 px-1 text-center text-sm font-semibold leading-snug text-slate-900">
-                {rightLabel === "How Genius Sports sees March Madness fans." ? (
+                {rightLabel === "How Genius Sports sees World Cup fans." ? (
                   <>
                     <span className="block">How Genius Sports sees</span>
-                    <span className="block">March Madness fans.</span>
+                    <span className="block">World Cup fans.</span>
                   </>
                 ) : (
                   rightLabel
@@ -344,9 +329,13 @@ function FanCloudComparisonSection({
               <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85 shadow-[0_14px_28px_rgba(15,23,42,0.2)] backdrop-blur-[2px]">
               <div className="relative aspect-[16/9] w-full">
                 <img
-                  src={leftImageSrc}
+                  src={rightImageSrc}
                   alt={rightLabel}
-                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
+                  className="pointer-events-none absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] select-none object-contain"
+                  style={{
+                    transform: `translateY(${rightImageTranslateY}px) scale(${rightImageScale})`,
+                    transformOrigin: "center"
+                  }}
                   draggable={false}
                 />
               </div>
@@ -372,28 +361,29 @@ function FanCloudComparisonSection({
             <div className={rightLabelClasses}>
               {rightLabel}
             </div>
-            <div ref={imageBoxRef} className="relative aspect-[16/9] min-h-[195px] w-full">
-              <img
-                src={leftImageSrc}
-                alt={leftLabel}
-                className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
-                style={{
-                  filter: leftImageFilter,
-                  transition: "filter 220ms ease"
-                }}
-                draggable={false}
-              />
-
-              <div
-                className="absolute inset-y-0 left-0 overflow-hidden"
-                style={{ width: `${sliderPercent}%` }}
-              >
+            <div className="relative aspect-[16/9] min-h-[195px] w-full">
+              <div className="absolute inset-2 md:inset-3">
+                <img
+                  src={leftImageSrc}
+                  alt={leftLabel}
+                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
+                  style={{
+                    clipPath: `inset(0 ${100 - sliderPercent}% 0 0)`,
+                    transform: `translateY(${leftImageTranslateY}px) scale(${leftImageScale})`,
+                    transformOrigin: "center",
+                    filter: leftImageFilter,
+                    transition: "filter 220ms ease"
+                  }}
+                  draggable={false}
+                />
                 <img
                   src={rightImageSrc}
                   alt={rightLabel}
-                  className="pointer-events-none absolute left-0 top-0 h-full max-w-none select-none object-contain"
+                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
                   style={{
-                    width: `${imageBoxWidthPx}px`,
+                    clipPath: `inset(0 0 0 ${sliderPercent}%)`,
+                    transform: `translateY(${rightImageTranslateY}px) scale(${rightImageScale})`,
+                    transformOrigin: "center",
                     filter: rightImageFilter,
                     transition: "filter 220ms ease"
                   }}

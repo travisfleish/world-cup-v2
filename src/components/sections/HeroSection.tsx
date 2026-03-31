@@ -1,9 +1,13 @@
 import { motion } from "framer-motion";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { type MouseEvent, useCallback, useEffect, useState } from "react";
 import { useReducedMotionSafe } from "../motion/MotionPrimitives";
+import GeniusStripHoverBg from "../ui/GeniusStripHoverBg";
 type HeroSectionProps = {
   kicker: string;
+  headlineLines?: string[];
   subhead: string;
+  ctaButtonText?: string;
+  ctaHref?: string;
   titleLines: string[];
   stats: {
     value: string;
@@ -29,10 +33,31 @@ function parseNumericStat(value: string) {
   return Number.isNaN(parsed) ? null : parsed;
 }
 
-function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSectionProps) {
+function renderTitleWithWorldCupAccent(line: string) {
+  return line.split(/(World|Cup)/g).map((segment, index) =>
+    segment === "World" || segment === "Cup" ? (
+      <span key={`world-cup-${index}`} className="text-[#0014ff]">
+        {segment}
+      </span>
+    ) : (
+      <span key={`segment-${index}`}>{segment}</span>
+    )
+  );
+}
+
+function HeroSection({
+  kicker,
+  headlineLines,
+  subhead,
+  ctaButtonText,
+  ctaHref,
+  titleLines,
+  stats,
+  sideBarStat
+}: HeroSectionProps) {
+  const hasHeadlineLines = Boolean(headlineLines?.length);
   const reducedMotion = useReducedMotionSafe();
   const [isLoaded, setIsLoaded] = useState(false);
-  const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [rollVersions, setRollVersions] = useState<Record<string, number>>({});
   const [hideDesktopStatPanel, setHideDesktopStatPanel] = useState(false);
   const numericSideValue = parseNumericStat(sideBarStat.value);
@@ -40,17 +65,6 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
 
   useEffect(() => {
     setIsLoaded(true);
-  }, []);
-
-  useEffect(() => {
-    if (typeof window === "undefined") return;
-
-    const mediaQuery = window.matchMedia("(max-width: 767px)");
-    const syncViewport = () => setIsMobileViewport(mediaQuery.matches);
-    syncViewport();
-    mediaQuery.addEventListener("change", syncViewport);
-
-    return () => mediaQuery.removeEventListener("change", syncViewport);
   }, []);
 
   const updateDesktopPanelVisibility = useCallback(() => {
@@ -89,6 +103,43 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
     }));
   };
 
+  const smoothScrollToAnchor = (event: MouseEvent<HTMLAnchorElement>) => {
+    if (typeof window === "undefined" || !ctaHref || !ctaHref.startsWith("#")) return;
+
+    const target = document.querySelector(ctaHref);
+    if (!target) return;
+
+    event.preventDefault();
+    const targetTop = target.getBoundingClientRect().top + window.scrollY;
+
+    if (reducedMotion) {
+      window.scrollTo({ top: targetTop });
+      return;
+    }
+
+    const startTop = window.scrollY;
+    const distance = targetTop - startTop;
+    const durationMs = 760;
+    const startTime = performance.now();
+    const easeOutCubic = (t: number) => 1 - (1 - t) ** 3;
+
+    const animate = (now: number) => {
+      const elapsed = now - startTime;
+      const progress = Math.min(elapsed / durationMs, 1);
+      const easedProgress = easeOutCubic(progress);
+
+      window.scrollTo({
+        top: startTop + distance * easedProgress
+      });
+
+      if (progress < 1) {
+        window.requestAnimationFrame(animate);
+      }
+    };
+
+    window.requestAnimationFrame(animate);
+  };
+
   return (
     <section className="relative w-full overflow-hidden bg-white">
       <div className="pointer-events-none absolute bottom-0 right-0 hidden h-[60%] w-[42%] md:block" aria-hidden>
@@ -111,31 +162,53 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
             animate={{ opacity: isLoaded || reducedMotion ? 1 : 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.3, ease: "easeOut" }}
           >
-            <div className="mx-auto w-fit text-left">
-              <p className="text-[0.72rem] font-medium uppercase tracking-[0.24em] text-slate-700 md:text-sm">
-                {isMobileViewport ? (
-                  <>
-                    <span className="block">Genius Sports</span>
-                    <span className="block">Partnership Opportunities</span>
-                  </>
-                ) : (
-                  kicker
-                )}
-              </p>
-              <div className="mt-3 h-px w-20 bg-slate-900/25 md:mt-4" />
-              <h1 className="-ml-[0.02em] mt-4 font-heading font-medium tracking-[-0.01em] text-black leading-[0.9] text-[clamp(2.25rem,6.75vw,4.6rem)] md:mt-5">
-                {titleLines.map((line, index) => (
-                  <span
-                    key={line}
-                    className={`block ${line === "2026" || index === titleLines.length - 1 ? "mt-2 text-[0.78em] font-medium tracking-[0.02em] text-slate-800" : ""}`}
-                  >
-                    {line}
+            <div className="mx-auto w-full max-w-[60ch] text-left">
+              <span className="mb-0 inline-block font-heading font-book text-[15px] leading-[21.75px] tracking-[-0.140625px] opacity-80">
+                {kicker}
+              </span>
+              {hasHeadlineLines ? (
+                <p className="mt-4 max-w-[24ch] text-[clamp(1.05rem,1.7vw,2rem)] font-medium leading-[1.04] tracking-[-0.01em] text-[#0A1330]">
+                  {(headlineLines ?? []).map((line) => (
+                    <span key={line} className="block">
+                      {line}
+                    </span>
+                  ))}
+                </p>
+              ) : null}
+              <h1
+                className={`-ml-[0.02em] text-[72px] leading-[77.76px] tracking-[-2.16px] font-[300] text-[var(--gs-text)] [font-family:ESKlarheitKurrentTRIAL,_system-ui,_-apple-system,_"Segoe_UI",_Roboto,_Helvetica,_Arial,_sans-serif,_"Apple_Color_Emoji",_"Segoe_UI_Emoji"] [font-feature-settings:normal] [font-variation-settings:normal] md:mt-5 ${hasHeadlineLines ? "mt-4" : "mt-0"}`}
+              >
+                <span className="block">
+                  {renderTitleWithWorldCupAccent(titleLines[0] ?? "")}
+                </span>
+                <span className="flex items-end gap-2 md:gap-3">
+                  <span>
+                    {renderTitleWithWorldCupAccent(titleLines[1] ?? "")}
                   </span>
-                ))}
+                  <span>
+                    {renderTitleWithWorldCupAccent(titleLines[2] ?? "")}
+                  </span>
+                </span>
               </h1>
-              <p className="mt-4 max-w-[26ch] text-balance text-[1.1rem] font-medium leading-tight text-[#0A1330] md:mt-5 md:text-[1.35rem] lg:mt-3 lg:text-[1.6rem]">
+              <p className="mt-4 w-full max-w-none text-base font-normal leading-relaxed text-[#0A1330] md:mt-5 md:text-[1.02rem] lg:mt-3 lg:text-[1.08rem]">
                 {subhead}
               </p>
+              {ctaButtonText ? (
+                <div className="mt-6 md:mt-7">
+                  <a
+                    href={ctaHref ?? "#contact-cta"}
+                    className="group inline-flex items-center justify-center focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-[#0d1226] focus-visible:ring-offset-2"
+                    onClick={smoothScrollToAnchor}
+                  >
+                    <span className="relative cursor-pointer overflow-hidden rounded-full bg-[#0d1226]">
+                      <GeniusStripHoverBg />
+                      <span className='relative left-0 z-20 inline-flex h-[54.3906px] w-[219px] items-center justify-center rounded-full px-[36px] text-center text-[17px] font-normal leading-[20.4px] tracking-[-0.180625px] text-white transition-colors duration-300 ease-in-out [font-family:ESKlarheitKurrentTRIAL,_system-ui,_-apple-system,_"Segoe_UI",_Roboto,_Helvetica,_Arial,_sans-serif,_"Apple_Color_Emoji",_"Segoe_UI_Emoji"] [font-feature-settings:normal] [font-variation-settings:normal]'>
+                        {ctaButtonText}
+                      </span>
+                    </span>
+                  </a>
+                </div>
+              ) : null}
             </div>
           </motion.div>
           <motion.div
@@ -158,17 +231,17 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
                 const tileSize = stat.size ?? "md";
                 const numericStatValue = parseNumericStat(stat.value);
                 const statRollId = `${stat.value}-${stat.label}-${index}`;
-                const isTwentyMillionTile = stat.value === "20" && stat.label === "Million";
-                const isHundredMillionTile = stat.value === "100" && stat.label === "Million";
-                const isSixtyEightTeamsTile = stat.value === "68" && stat.label === "Teams";
+                const isFirstStatTile = index === 0;
+                const isSecondStatTile = index === 1;
+                const isThirdStatTile = index === 2;
                 const spanClass =
-                  isHundredMillionTile
+                  isThirdStatTile
                     ? "col-span-8 min-h-[6.7rem] rounded-2xl p-3 md:col-span-1 md:min-h-[10.75rem] md:p-6 lg:col-span-5 lg:row-span-2 lg:min-h-0 lg:p-8"
                     : tileSize === "lg"
                       ? DESKTOP_TILE_CLASSES.lg
                       : tileSize === "sm"
                         ? DESKTOP_TILE_CLASSES.sm
-                        : index === 1
+                        : isSecondStatTile
                           ? "col-span-8 min-h-[6.5rem] rounded-2xl p-3 md:col-span-1 md:min-h-[9.75rem] md:p-5 lg:col-span-3 lg:row-span-2 lg:min-h-0 lg:p-6"
                           : DESKTOP_TILE_CLASSES.md;
 
@@ -176,11 +249,11 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
                   <article
                     key={`${stat.value}-${stat.label}`}
                     className={`text-white lg:h-full lg:min-h-0 ${spanClass} ${
-                      isHundredMillionTile
+                      isThirdStatTile
                         ? "flex flex-col justify-center bg-[#0014ff] ring-1 ring-white/34"
-                        : isSixtyEightTeamsTile
+                        : isFirstStatTile
                           ? "flex flex-col justify-center bg-[#0014ff] ring-1 ring-white/30"
-                          : isTwentyMillionTile
+                          : isSecondStatTile
                             ? "flex flex-col justify-center bg-[#0014ff] ring-1 ring-white/28"
                             : "bg-[#0014ff] ring-1 ring-white/28"
                     }`}
@@ -188,9 +261,9 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
                   >
                     <p
                       className={`font-medium leading-[0.88] ${
-                        isHundredMillionTile
+                        isThirdStatTile
                           ? "text-[1.95rem] md:text-[3rem] lg:text-[clamp(1.95rem,3.2vw,4.15rem)]"
-                          : isSixtyEightTeamsTile
+                          : isFirstStatTile
                             ? "text-[1.8rem] md:text-[2.7rem] lg:text-[clamp(1.8rem,2.85vw,3.4rem)]"
                             : "text-[1.75rem] md:text-[2.6rem] lg:text-[clamp(1.75rem,2.5vw,3.1rem)]"
                       }`}
@@ -224,7 +297,7 @@ function HeroSection({ kicker, subhead, titleLines, stats, sideBarStat }: HeroSe
                     {sideBarStat.description}
                   </p>
                 </div>
-                <div className="relative hidden w-full overflow-hidden aspect-[3/4] md:block md:aspect-[2/3] lg:aspect-[3/4] lg:min-h-0">
+                <div className="relative hidden w-full min-h-0 flex-1 overflow-hidden md:block">
                   <img
                     src="/fans-vertical.png"
                     alt="Cheering basketball fans"

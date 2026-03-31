@@ -139,11 +139,11 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     }
   },
   fanCloudComparison: {
-    headline: "No One Knows March Madness\nFans Better Than Genius Sports",
-    leftLabel: "How other data and media partners see March Madness fans.",
-    rightLabel: "How Genius Sports sees March Madness fans.",
-    leftImageSrc: "/genius_fan_cloud.png",
-    rightImageSrc: "/other_fan_cloud.png",
+    headline: "No One Knows World Cup\nFans Better Than Genius Sports",
+    leftLabel: "How other data and media partners see World Cup fans.",
+    rightLabel: "How Genius Sports sees World Cup fans.",
+    leftImageSrc: "/girl2.png",
+    rightImageSrc: "/girl_full2.png",
     helperText: "Drag the slider to compare.",
     metricsEyebrow: "",
     metrics: [
@@ -155,7 +155,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     ]
   },
   campaignIntro: {
-    title: "Genius Sports March Madness Moments",
+    title: "Genius Sports World Cup Moments",
     subtitle:
       "Connecting brands with fans during the moments that matter most, when emotions are high, history is being made, and brand recall is at its highest."
   },
@@ -180,7 +180,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     }
   },
   howItWorks: {
-    header: "Your March Madness Moments Campaign: How it Works",
+    header: "Your World Cup Moments Campaign",
     paragraph:
       "Addressable ads triggered at precise, emotion-driven moments before, during, or after the game, Genius Moments uses official game data and our Genius Fan Graph segments to deliver targeted creative to the right fans based on the real-time moment that matters most.",
     steps: [
@@ -205,20 +205,14 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     introParagraph2:
       "Select the key in-game or tournament moments you want to align your brand with.",
     labels: [
-      "GAMEDAY LEAD UP",
-      "LATE GAME RALLY",
-      "DOWN TO THE WIRE",
-      "BUZZER BEATER WIN",
-      "ADVANCEMENT",
-      "ELIMINATION",
-      "UPSET",
-      "CINDERELLA STORY",
-      "SWEET 16",
-      "ELITE 8",
-      "FINAL FOUR",
-      "CHAMPIONSHIP",
-      "CHAMPION",
-      "HERO GAME"
+      "TOURNAMENT KICKOFF SPOTLIGHT",
+      "FIRST CARD FLASHPOINT",
+      "COMEBACK ON",
+      "GOAL MOMENT",
+      "MOMENTUM SHIFT",
+      "KNOCKOUT QUALIFICATION MOMENT",
+      "PENALTY SHOOTOUT PRESSURE",
+      "CHAMPIONSHIP CELEBRATION"
     ],
     modalTemplate: {
       bullets: ["What it is", "Why it matters to fans", "Best message types"]
@@ -228,9 +222,9 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     header: "Step 2: Customize Your Audience",
     subtitle:
       "The Genius Sports audience desk will create custom addressable segments aligned to your specific campaign goals and target audiences.",
-    leftHeader: "Popular March Madness Audiences",
+    leftHeader: "Popular World Cup Audiences",
     leftList: [
-      "March Madness Fans",
+      "World Cup Fans",
       "Specific Team Fans",
       "Conference Specific",
       "Women’s Sports Fans",
@@ -250,30 +244,30 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
   creativeAndChannel: {
     header: "Optional: Customize Your Creative & Channel",
     paragraph:
-      "With Genius Sports AI-driven dynamic creative optimization engine, advertisers can tailor their message to each moment, whether it’s a comeback, a buzzer beater, or a Cinderella run. Select content can be pushed across channels, including CTV, OTT, and digital.",
+      "With Genius Sports AI-driven dynamic creative optimization engine, advertisers can tailor their message to each moment, whether it’s a comeback, a buzzer beater, or a championship celebration. Select content can be pushed across channels, including CTV, OTT, and digital.",
     creativeViz: {
-      triggerTitle: "Moment Trigger: Cinderella Run",
+      triggerTitle: "Moment Trigger: Championship Celebration",
       exampleLabel: "Example Event:",
-      exampleEvent: "An 11th-seeded VCU makes it to the sweet 16",
-      leftAudienceLabel: "March Madness Fans + Existing Brand Purchaser",
+      exampleEvent: "Mexico wins the World Cup",
+      leftAudienceLabel: "World Cup Fans + Existing Brand Purchaser",
       leftCardTitle: "CREATIVE MESSAGE A",
-      leftCardImageSrc: "/acme-tv-creative-a-cutout-v2.png",
+      leftCardImageSrc: "/comfystay.png",
       leftLead: "Big moments reveal future stars.",
       leftBody:
         "VCU showed us: the biggest stages create the biggest opportunities. Thanks for being a loyal [Brand] customer -- celebrate the rise of the tournament's newest star with 15% off your next purchase.",
-      rightAudienceLabel: "March Madness Fans + Competitive Brand Purchaser",
+      rightAudienceLabel: "World Cup Fans + Competitive Brand Purchaser",
       rightCardTitle: "CREATIVE MESSAGE B",
       rightCardImageSrc: "/acme-tv-creative-b-cutout-v2.png",
       rightLead: "Every tournament creates new stars.",
       rightBody:
-        "From under-the-radar to center stage, this March Madness breakout proved anything can happen. New to [Brand]? Start strong with 15% off your first purchase and be ready for whatever emerges next."
+        "From under-the-radar to center stage, this World Cup breakout proved anything can happen. New to [Brand]? Start strong with 15% off your first purchase and be ready for whatever emerges next."
     }
   },
   cta: {
     primaryButtonText: "Request Moment-Based Activation",
     modalTitle: "Request Moment-Based Activation",
     modalBody:
-      "Thanks for your interest in activating against March Madness moments. Reach out and our team will help map moments, audiences, and creative strategy.",
+      "Thanks for your interest in activating against World Cup moments. Reach out and our team will help map moments, audiences, and creative strategy.",
     email: "sales@geniussports.com",
     closeButtonText: "Close"
   }

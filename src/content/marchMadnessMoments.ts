@@ -8,19 +8,26 @@ export type StepCard = {
   badge?: string;
 };
 
-export type DualListSection = {
+export type AudienceGroup = {
+  title: string;
+  description: string;
+  audiences: string[];
+};
+
+export type AudienceGridSection = {
   header: string;
   subtitle?: string;
-  leftHeader?: string;
-  leftList: string[];
-  rightHeader: string;
-  rightList: string[];
+  popularHeader?: string;
+  audienceGroups: AudienceGroup[];
 };
 
 export type MarchMadnessMomentsContent = {
   hero: {
     kicker: string;
+    headlineLines?: string[];
     subhead: string;
+    ctaButtonText?: string;
+    ctaHref?: string;
     titleLines: string[];
     stats: {
       value: string;
@@ -76,7 +83,7 @@ export type MarchMadnessMomentsContent = {
     labels: string[];
     modalTemplate: MomentModalTemplate;
   };
-  audiences: DualListSection;
+  audiences: AudienceGridSection;
   creativeAndChannel: {
     header: string;
     paragraph: string;
@@ -108,42 +115,43 @@ export type MarchMadnessMomentsContent = {
 export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
   hero: {
     kicker: "Genius Sports Partnership Opportunities",
-    subhead: "Genius Sports is the Exclusive Supplier of Official NCAA Data",
-    titleLines: ["March", "Madness", "2026"],
+    subhead:
+      "The biggest sporting event in global history is here. No one puts brands in the middle of the World Cup like Genius Sports.",
+    ctaButtonText: "Get Started",
+    ctaHref: "#contact-cta",
+    titleLines: ["World Cup", "2026", ""],
     stats: [
       {
-        value: "68",
-        label: "Teams",
-        description:
-          "The largest single-elimination tournament in major U.S. sports",
+        value: "6 Billion",
+        label: "",
+        description: "The number of people FIFA estimates will engage with the World Cup",
         size: "lg"
       },
       {
-        value: "20",
-        label: "Million",
-        description:
-          "Brackets filled out. The most participatory U.S. sports event",
+        value: "48",
+        label: "Teams",
+        description: "The most teams ever in World Cup history, up from 32 in 2022",
         size: "md"
       },
       {
-        value: "100",
-        label: "Million",
-        description: "Tournament-wide reach approaches 100 million viewers",
+        value: "104",
+        label: "Matches",
+        description: "With an average of 4 matches a day during the Group stages",
         size: "md"
       }
     ],
     sideBarStat: {
-      value: "21",
-      label: "Days",
-      description: "Three weeks of nonstop live competition"
+      value: "140",
+      label: "Super Bowls",
+      description: "The relative size of the World Cup in viewership"
     }
   },
   fanCloudComparison: {
-    headline: "No One Knows March Madness\nFans Better Than Genius Sports",
-    leftLabel: "How other data and media partners see March Madness fans.",
-    rightLabel: "How Genius Sports sees March Madness fans.",
-    leftImageSrc: "/genius_fan_cloud.png",
-    rightImageSrc: "/other_fan_cloud.png",
+    headline: "No One Knows World Cup\nFans Better Than Genius Sports",
+    leftLabel: "How other data and media partners see World Cup fans.",
+    rightLabel: "How Genius Sports sees World Cup fans.",
+    leftImageSrc: "/girl2.png",
+    rightImageSrc: "/girl_full2.png",
     helperText: "Drag the slider to compare.",
     metricsEyebrow: "",
     metrics: [
@@ -155,7 +163,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     ]
   },
   campaignIntro: {
-    title: "Genius Sports March Madness Moments",
+    title: "Genius Sports World Cup Moments",
     subtitle:
       "Connecting brands with fans during the moments that matter most, when emotions are high, history is being made, and brand recall is at its highest."
   },
@@ -180,7 +188,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     }
   },
   howItWorks: {
-    header: "Your March Madness Moments Campaign: How it Works",
+    header: "Your World Cup Moments Campaign",
     paragraph:
       "Addressable ads triggered at precise, emotion-driven moments before, during, or after the game, Genius Moments uses official game data and our Genius Fan Graph segments to deliver targeted creative to the right fans based on the real-time moment that matters most.",
     steps: [
@@ -205,20 +213,16 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     introParagraph2:
       "Select the key in-game or tournament moments you want to align your brand with.",
     labels: [
-      "GAMEDAY LEAD UP",
-      "LATE GAME RALLY",
-      "DOWN TO THE WIRE",
-      "BUZZER BEATER WIN",
-      "ADVANCEMENT",
-      "ELIMINATION",
-      "UPSET",
-      "CINDERELLA STORY",
-      "SWEET 16",
-      "ELITE 8",
-      "FINAL FOUR",
-      "CHAMPIONSHIP",
-      "CHAMPION",
-      "HERO GAME"
+      "LEAD UP: TAILGATE/WATCH PARTY",
+      "MATCHUPS: LINEUPS AND ANTHEMS",
+      "SUPERSTITION: IN-GAME RITUALS",
+      "DOWN TO THE WIRE: EXTRA TIME",
+      "CINDERELLA STORIES: NEW COMPETITORS",
+      "COMEBACK STORIES: RETURNING NATIONS",
+      "ADVANCEMENT: WINNING MOMENTS",
+      "ELIMINATION: ELIMINATION",
+      "SET PIECE GOALS: SCORING PLAYS",
+      "SHOOT-OUTS"
     ],
     modalTemplate: {
       bullets: ["What it is", "Why it matters to fans", "Best message types"]
@@ -228,52 +232,58 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     header: "Step 2: Customize Your Audience",
     subtitle:
       "The Genius Sports audience desk will create custom addressable segments aligned to your specific campaign goals and target audiences.",
-    leftHeader: "Popular March Madness Audiences",
-    leftList: [
-      "March Madness Fans",
-      "Specific Team Fans",
-      "Conference Specific",
-      "Women’s Sports Fans",
-      "Big Sporting Event Fans",
-      "Women’s Basketball Fans",
-      "Gen Z College Sports Fans",
-      "High Value Sports Bettors"
-    ],
-    rightHeader: "Customize by:",
-    rightList: [
-      "Demographic + psychographic attributes",
-      "Category/brand purchase behavior across 5K+ brands",
-      "Category/brand purchase frequency across 5K+ brands",
-      "100+ Fluid Fan communities such as Values-Driven Fans, Gen Z fans, Sober Curious Fans"
+    popularHeader: "Popular World Cup Audiences",
+    audienceGroups: [
+      {
+        title: "League & Competition Fans",
+        description:
+          "Broad reach among global soccer audiences leading up to and during the tournament.",
+        audiences: ["Soccer Fans", "International Soccer Fans", "Hispanic Die Hards"]
+      },
+      {
+        title: "National Team Fans",
+        description: "Connect with fans supporting specific countries and national teams.",
+        audiences: [
+          "USA National Team Fans",
+          "Mexico National Team Fans",
+          "Brazil National Team Fans",
+          "Argentina National Team Fans"
+        ]
+      },
+      {
+        title: "Event Fans",
+        description: "Align brand messaging with one of the largest global sporting events.",
+        audiences: ["FIFA World Cup Fans", "International Sports Fans", "Big Sports Event Goers"]
+      }
     ]
   },
   creativeAndChannel: {
     header: "Optional: Customize Your Creative & Channel",
     paragraph:
-      "With Genius Sports AI-driven dynamic creative optimization engine, advertisers can tailor their message to each moment, whether it’s a comeback, a buzzer beater, or a Cinderella run. Select content can be pushed across channels, including CTV, OTT, and digital.",
+      "With Genius Sports AI-driven dynamic creative optimization engine, advertisers can tailor their message to each moment, whether it’s a comeback, a buzzer beater, or a championship celebration. Select content can be pushed across channels, including CTV, OTT, and digital.",
     creativeViz: {
-      triggerTitle: "Moment Trigger: Cinderella Run",
+      triggerTitle: "Moment Trigger: Championship Celebration",
       exampleLabel: "Example Event:",
-      exampleEvent: "An 11th-seeded VCU makes it to the sweet 16",
-      leftAudienceLabel: "March Madness Fans + Existing Brand Purchaser",
+      exampleEvent: "Mexico wins the World Cup",
+      leftAudienceLabel: "World Cup Fans + Existing Brand Purchaser",
       leftCardTitle: "CREATIVE MESSAGE A",
-      leftCardImageSrc: "/acme-tv-creative-a-cutout-v2.png",
+      leftCardImageSrc: "/comfystay.png",
       leftLead: "Big moments reveal future stars.",
       leftBody:
         "VCU showed us: the biggest stages create the biggest opportunities. Thanks for being a loyal [Brand] customer -- celebrate the rise of the tournament's newest star with 15% off your next purchase.",
-      rightAudienceLabel: "March Madness Fans + Competitive Brand Purchaser",
+      rightAudienceLabel: "World Cup Fans + Competitive Brand Purchaser",
       rightCardTitle: "CREATIVE MESSAGE B",
       rightCardImageSrc: "/acme-tv-creative-b-cutout-v2.png",
       rightLead: "Every tournament creates new stars.",
       rightBody:
-        "From under-the-radar to center stage, this March Madness breakout proved anything can happen. New to [Brand]? Start strong with 15% off your first purchase and be ready for whatever emerges next."
+        "From under-the-radar to center stage, this World Cup breakout proved anything can happen. New to [Brand]? Start strong with 15% off your first purchase and be ready for whatever emerges next."
     }
   },
   cta: {
     primaryButtonText: "Request Moment-Based Activation",
     modalTitle: "Request Moment-Based Activation",
     modalBody:
-      "Thanks for your interest in activating against March Madness moments. Reach out and our team will help map moments, audiences, and creative strategy.",
+      "Thanks for your interest in activating against World Cup moments. Reach out and our team will help map moments, audiences, and creative strategy.",
     email: "sales@geniussports.com",
     closeButtonText: "Close"
   }

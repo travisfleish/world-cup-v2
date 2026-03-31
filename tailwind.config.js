@@ -1,5 +1,9 @@
 export default {
-    content: ["./index.html", "./src/**/*.{ts,tsx}"],
+    content: [
+        "./index.html",
+        "./src/**/*.{ts,tsx}",
+        "./node_modules/@genius-sports/gs-marketing-ui/dist/**/*.{js,mjs}"
+    ],
     theme: {
         fontFamily: {
             sans: ["var(--font-sans)"],
