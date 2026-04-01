@@ -14,6 +14,12 @@ const CONNECTOR_GAP = 32; // Horizontal gap for connector lines
 const STROKE_WIDTH = 2.6;
 const CONNECTOR_BASE_STROKE = "#d4c089";
 const CONNECTOR_ACCENT_STROKE = "#eab308";
+const COUNTRY_FLAG_BY_CODE: Record<string, string> = {
+  AR: new URL("../../../flags/Screenshot 2026-04-01 at 3.32.27\u202fPM.png", import.meta.url).href,
+  BR: new URL("../../../flags/df106eb9-b1e5-41d2-bfa0-8b37c9971613.png", import.meta.url).href,
+  FR: new URL("../../../flags/1872e15b-5571-4300-892b-ed6100056058.png", import.meta.url).href,
+  MX: new URL("../../../flags/Screenshot 2026-04-01 at 3.29.19\u202fPM.png", import.meta.url).href
+};
 const ANIMATION_TIMINGS_MS = {
   state1: 1100,
   state2: 2200,
@@ -360,13 +366,13 @@ export function MarchMadnessBracket({
                   </motion.div>
                   <div className="bg-white border-2 border-green-500 rounded-lg overflow-hidden shadow-[0_10px_24px_rgba(16,185,129,0.22)] h-full">
                     <div className="flex items-center justify-center gap-3 px-4 h-full bg-green-50">
-                      <motion.div
-                        className="relative w-8 h-8 rounded-full bg-white border-2 border-yellow-400 flex items-center justify-center overflow-hidden flex-shrink-0"
-                      >
-                        <span className="text-[11px] font-semibold tracking-[0.06em] text-gray-900">
-                          MX
-                        </span>
-                      </motion.div>
+                      <div className="h-7 w-11 overflow-hidden rounded-[4px] border-2 border-yellow-400 bg-white flex-shrink-0">
+                        <img
+                          src={COUNTRY_FLAG_BY_CODE.MX}
+                          alt="Mexico flag"
+                          className="h-full w-full object-cover"
+                        />
+                      </div>
 
                       <div className="text-base text-gray-800 flex-shrink-0">Mexico</div>
 
@@ -411,6 +417,9 @@ interface TeamRowProps {
 }
 
 function TeamRow({ team, isWinner, isLoser, isMexico, showPulse }: TeamRowProps) {
+  const flagSrc = COUNTRY_FLAG_BY_CODE[team.code];
+  const usesWhiteFlagBorder = team.code === "BR" || team.code === "FR";
+
   return (
     <motion.div
       className={`flex items-center justify-start gap-3 px-4 flex-1 ${
@@ -423,8 +432,12 @@ function TeamRow({ team, isWinner, isLoser, isMexico, showPulse }: TeamRowProps)
       transition={{ duration: 0.45, ease: "easeOut" }}
     >
       <motion.div
-        className={`relative w-7 h-7 rounded-full bg-white flex items-center justify-center overflow-hidden flex-shrink-0 ${
-          isMexico ? "border-2 border-yellow-400" : "border border-gray-300"
+        className={`relative h-5 w-7 rounded-[3px] bg-white flex items-center justify-center overflow-hidden flex-shrink-0 ${
+          isMexico
+            ? "border-2 border-yellow-400"
+            : usesWhiteFlagBorder
+              ? "border border-white"
+              : "border border-gray-300"
         }`}
         animate={{
           scale: showPulse ? [1, 1.15, 1] : 1,
@@ -443,9 +456,17 @@ function TeamRow({ team, isWinner, isLoser, isMexico, showPulse }: TeamRowProps)
           repeatDelay: 0.2,
         }}
       >
-        <span className="text-[10px] font-semibold tracking-[0.06em] text-gray-700">
-          {team.code}
-        </span>
+        {flagSrc ? (
+          <img
+            src={flagSrc}
+            alt={`${team.name} flag`}
+            className="h-full w-full object-cover"
+          />
+        ) : (
+          <span className="text-[10px] font-semibold tracking-[0.06em] text-gray-700">
+            {team.code}
+          </span>
+        )}
       </motion.div>
 
       <div className="text-sm text-gray-800 leading-tight flex-1">{team.name}</div>
