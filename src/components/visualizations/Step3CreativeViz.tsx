@@ -21,6 +21,9 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [hasStartedAnimation, setHasStartedAnimation] = useState(reducedMotion);
   const [bracketAnimationState, setBracketAnimationState] = useState(reducedMotion ? 3 : 0);
+  const [mobileCreativeIndex, setMobileCreativeIndex] = useState(0);
+  const mobileCreativeCarouselRef = useRef<HTMLDivElement | null>(null);
+  const mobileCreativeCardRefs = useRef<Record<number, HTMLElement | null>>({});
   const handleBracketComplete = useCallback(() => {
     if (typeof window === "undefined" || reducedMotion) {
       setIsBracketComplete(true);
@@ -55,6 +58,39 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
       setHasStartedAnimation(true);
     }
   }, [hasEnteredViewport, hasStartedAnimation]);
+
+  const mobileCreativeCards = [
+    {
+      title: "Argentina Advances:",
+      imageSrc: argentinaCreativeSrc,
+      imageAlt: "Comfy Stay Argentina celebration creative"
+    },
+    {
+      title: "Mexico Advances:",
+      imageSrc: data.leftCardImageSrc,
+      imageAlt: data.leftCardTitle
+    }
+  ];
+
+  const focusMobileCreativeCard = (index: number, behavior: ScrollBehavior = "smooth") => {
+    const nextIndex = Math.max(0, Math.min(index, mobileCreativeCards.length - 1));
+    setMobileCreativeIndex(nextIndex);
+
+    const carouselNode = mobileCreativeCarouselRef.current;
+    const cardNode = mobileCreativeCardRefs.current[nextIndex];
+    if (!carouselNode || !cardNode) return;
+
+    cardNode.scrollIntoView({
+      behavior,
+      inline: "start",
+      block: "nearest"
+    });
+  };
+
+  const moveMobileCreativeCard = (direction: "left" | "right") => {
+    const nextIndex = direction === "left" ? mobileCreativeIndex - 1 : mobileCreativeIndex + 1;
+    focusMobileCreativeCard(nextIndex);
+  };
 
   return (
     <motion.div
@@ -118,7 +154,7 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
           <div className="mt-0 -mt-px md:hidden">
             <div className="flex flex-col items-center px-1 pt-2 sm:px-0">
               <motion.div
-                className="mt-3 grid w-full max-w-[42rem] grid-cols-1 gap-8"
+                className="mt-3 w-full max-w-[42rem]"
                 initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -127,40 +163,53 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
                   delay: singleCardFadeDelayMobile
                 }}
               >
-                <motion.div
-                  className="mx-auto flex w-full max-w-[680px] flex-col items-center"
-                  initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reducedMotion ? 0.1 : 0.3, ease: "easeOut", delay: reducedMotion ? 0 : 0.08 }}
+                <div
+                  ref={mobileCreativeCarouselRef}
+                  className="w-full overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
                 >
-                  <p className="text-center font-heading text-sm font-medium text-slate-900 md:text-base">
-                    Argentina Advances:
-                  </p>
-                  <img
-                    src={argentinaCreativeSrc}
-                    alt="Comfy Stay Argentina celebration creative"
-                    className="mt-3 block h-auto w-full rounded-xl"
-                    loading="lazy"
-                    draggable={false}
-                  />
-                </motion.div>
-                <motion.div
-                  className="mx-auto flex w-full max-w-[680px] flex-col items-center"
-                  initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ duration: reducedMotion ? 0.1 : 0.3, ease: "easeOut", delay: reducedMotion ? 0 : 0.45 }}
-                >
-                  <p className="text-center font-heading text-sm font-medium text-slate-900 md:text-base">
-                    Mexico Advances:
-                  </p>
-                  <img
-                    src={data.leftCardImageSrc}
-                    alt={data.leftCardTitle}
-                    className="mt-3 block h-auto w-full rounded-xl"
-                    loading="lazy"
-                    draggable={false}
-                  />
-                </motion.div>
+                  <div className="flex w-full snap-x snap-mandatory gap-4 px-1 sm:px-0">
+                    {mobileCreativeCards.map((card, index) => (
+                      <article
+                        key={`mobile-creative-card-${index}`}
+                        ref={(node) => {
+                          mobileCreativeCardRefs.current[index] = node;
+                        }}
+                        className="w-full shrink-0 snap-start"
+                      >
+                        <p className="text-center font-heading text-sm font-medium text-slate-900 md:text-base">
+                          {card.title}
+                        </p>
+                        <img
+                          src={card.imageSrc}
+                          alt={card.imageAlt}
+                          className="mt-3 block h-auto w-full rounded-xl"
+                          loading="lazy"
+                          draggable={false}
+                        />
+                      </article>
+                    ))}
+                  </div>
+                </div>
+                <div className="mt-3 flex items-center justify-center gap-3">
+                  <button
+                    type="button"
+                    onClick={() => moveMobileCreativeCard("left")}
+                    disabled={mobileCreativeIndex <= 0}
+                    aria-label="Show previous creative"
+                    className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 bg-white text-2xl leading-none text-slate-800 shadow-[0_8px_20px_rgba(15,23,42,0.18)] disabled:cursor-not-allowed disabled:opacity-35"
+                  >
+                    <span aria-hidden="true">←</span>
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => moveMobileCreativeCard("right")}
+                    disabled={mobileCreativeIndex >= mobileCreativeCards.length - 1}
+                    aria-label="Show next creative"
+                    className="inline-flex h-12 w-12 items-center justify-center rounded-full border border-slate-300 bg-white text-2xl leading-none text-slate-800 shadow-[0_8px_20px_rgba(15,23,42,0.18)] disabled:cursor-not-allowed disabled:opacity-35"
+                  >
+                    <span aria-hidden="true">→</span>
+                  </button>
+                </div>
               </motion.div>
             </div>
           </div>
