@@ -118,7 +118,7 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
           <div className="mt-0 -mt-px md:hidden">
             <div className="flex flex-col items-center px-1 pt-2 sm:px-0">
               <motion.div
-                className="mt-3 grid w-full max-w-[42rem] grid-cols-1 gap-5"
+                className="mt-3 grid w-full max-w-[42rem] grid-cols-1 gap-8"
                 initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -139,7 +139,7 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
                   <img
                     src={argentinaCreativeSrc}
                     alt="Comfy Stay Argentina celebration creative"
-                    className="mt-2 block h-auto w-full rounded-xl"
+                    className="mt-3 block h-auto w-full rounded-xl"
                     loading="lazy"
                     draggable={false}
                   />
@@ -156,7 +156,7 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
                   <img
                     src={data.leftCardImageSrc}
                     alt={data.leftCardTitle}
-                    className="mt-2 block h-auto w-full rounded-xl"
+                    className="mt-3 block h-auto w-full rounded-xl"
                     loading="lazy"
                     draggable={false}
                   />

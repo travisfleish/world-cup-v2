@@ -19,7 +19,7 @@ function CreativeChannelSection({ header, paragraph, creativeViz }: CreativeChan
     >
       <h2 className="section-title">{header}</h2>
       <p className="section-copy">{paragraph}</p>
-      <div className="mt-4 -mx-4 border-y border-slate-200 bg-slate-50/70 px-4 py-3 text-center sm:-mx-6 sm:px-6 md:hidden">
+      <div className="mt-7 -mx-4 border-y border-slate-200 bg-slate-50/70 px-4 py-3 text-center sm:-mx-6 sm:px-6 md:hidden">
         <p className="text-base font-medium text-slate-900">
           {triggerSuffix ? (
             <>

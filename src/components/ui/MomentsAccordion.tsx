@@ -145,6 +145,9 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
             </span>
           </button>
         </div>
+        <p className="text-center text-sm font-medium tabular-nums text-slate-600">
+          {`${focusedMobileIndex >= 0 ? focusedMobileIndex + 1 : 0}/${labels.length}`}
+        </p>
         <div
           ref={mobileCarouselRef}
           className="w-full overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
