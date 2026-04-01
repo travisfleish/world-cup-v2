@@ -269,7 +269,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     creativeViz: {
       triggerTitle: "Moment Trigger: Tournament Advancement",
       exampleLabel: "Example Event:",
-      exampleEvent: "USA advances to the knockout stage",
+      exampleEvent: "A team advances in the tournament",
       leftAudienceLabel: "World Cup Fans + Existing Brand Purchaser",
       leftCardTitle: "CREATIVE MESSAGE A",
       leftCardImageSrc: "/comfystay.png",
