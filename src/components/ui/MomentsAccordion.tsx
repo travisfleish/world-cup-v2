@@ -4,7 +4,6 @@ import { useReducedMotionSafe } from "../motion/MotionPrimitives";
 
 type MomentDetails = {
   signal: string;
-  emotion: string;
   description: string;
 };
 
@@ -203,7 +202,6 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
               {(() => {
                 const details = detailsByLabel[mobileActiveId] ?? {
                   signal: "Moment signal details for this selection.",
-                  emotion: "Moment emotion details for this selection.",
                   description:
                     "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
                 };
@@ -213,10 +211,6 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
                     <p className="text-sm text-slate-900">
                       <span className="font-medium text-slate-700">Signal: </span>
                       {details.signal}
-                    </p>
-                    <p className="text-sm text-slate-900">
-                      <span className="font-medium text-slate-700">Emotion: </span>
-                      {details.emotion}
                     </p>
                     <p className="text-sm text-slate-900">
                       <span className="font-medium text-slate-700">Description: </span>
@@ -238,7 +232,6 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
               const panelId = `moment-panel-${columnIndex}-${index}`;
               const details = detailsByLabel[label] ?? {
                 signal: "Moment signal details for this selection.",
-                emotion: "Moment emotion details for this selection.",
                 description:
                   "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
               };
@@ -286,10 +279,6 @@ function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
                           <p className="text-base text-slate-900">
                             <span className="font-medium text-slate-700">Signal: </span>
                             {details.signal}
-                          </p>
-                          <p className="text-base text-slate-900">
-                            <span className="font-medium text-slate-700">Emotion: </span>
-                            {details.emotion}
                           </p>
                           <p className="text-base text-slate-900">
                             <span className="font-medium text-slate-700">Description: </span>

@@ -11,65 +11,55 @@ type MomentsSectionProps = {
 
 const highlightedPhrases = ["Genius Moments", "Fan Graph"] as const;
 const proprietaryMomentLabels = new Set<string>();
-const momentDetailsByLabel: Record<string, { signal: string; emotion: string; description: string }> = {
+const momentDetailsByLabel: Record<string, { signal: string; description: string }> = {
   "LEAD UP: TAILGATE/Watch Party": {
     signal: "Kick-off time",
-    emotion: "Anticipation",
     description:
       "This package activates 24 hours ahead of kick-off, reaching audiences the moment excitement builds and last-minute preparation happens. Ideal for brands looking to own the start of the experience and associate it with pre-game rituals, research, and anticipation."
   },
   "MATCHUPS: LINEUPS AND ANTHEMS": {
     signal: "Kick-off time",
-    emotion: "Anticipation, Pride",
     description:
       "Activates immediately before each match. Targets fans of participating teams and connects to the moment when national anthems are sung and lineups are announced."
   },
   "SUPERSTITION: IN-GAME RITUALS": {
     signal: "Kick-off time and halftime; win/loss",
-    emotion: "Fear and tension",
     description:
       "Soccer fans are very superstitious: sitting in the same spot every game, wearing the same jersey if the team keeps winning, and not moving during key moments. Targets fans of winning and losing teams."
   },
   "DOWN TO THE WIRE: EXTRA TIME": {
     signal: "Between 45% and 55% win probability when extra time is announced",
-    emotion: "Fear and tension",
     description:
       "Activates when extra time is added to a close match. It builds on a team's late-game push, delivering high-attention moments filled with tension, hope, and rising excitement."
   },
   "CINDERELLA STORIES: NEW COMPETITORS": {
     signal:
       "Matches involving newcomer competitors (Curacao, Uzbekistan, Jordan); goals by any new competitor nation; wins by any new competitor nation",
-    emotion: "Surprise, Joy",
     description:
       "Activates before kick-off when a new competitor nation in the World Cup is playing. Delivers on the surprise and potential of underdogs and newcomers."
   },
   "COMEBACK STORIES: RETURNING NATIONS": {
     signal: "Matches involving Norway and Scotland, who have not been involved in decades",
-    emotion: "Trust, Pride, Surprise",
     description:
       "Activates before kick-off when a returning competitor nation in the World Cup is playing. Delivers on the surprise and potential of returning nations, with a sense of belonging and achievement."
   },
   "ADVANCEMENT: WINNING MOMENTS": {
     signal: "Wins throughout the tournament that result in teams advancing in the group standings",
-    emotion: "Joy and Love",
     description:
       "Activates when teams give their fans hope and something to look forward to in the next stage of the World Cup, delivering relief and bragging rights to fans who were feeling down."
   },
   "ELIMINATION": {
     signal: "Losses during the World Cup that put teams mathematically out of contention",
-    emotion: "Disgust/Anger",
     description:
       "Activates disgust among losing fan bases. They look for blame, changes, and most of all dread the years they will have to wait to try again."
   },
   "SET PIECE GOALS: SCORING PLAYS": {
     signal: "Goals scored from corner kicks and penalty kicks",
-    emotion: "Surprise, Joy",
     description:
       "Activates when teams score from a set position, usually triggered by a dazzling curving shot or a well-placed pass."
   },
   "SHOOT-OUTS": {
     signal: "Games that go to the shoot-out stage",
-    emotion: "Anticipation, Joy or Sadness depending on outcome",
     description:
       "Own the most iconic moment in sports: after two extra-time periods, games are decided with each team taking five penalty kicks. This can also lead to sudden death if teams are still tied after the initial five kicks."
   }
