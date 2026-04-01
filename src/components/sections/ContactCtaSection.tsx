@@ -98,7 +98,7 @@ function ContactCtaSection() {
             </dl>
           </div>
 
-          <div className="mx-auto w-full max-w-[46rem] overflow-hidden rounded-2xl bg-white p-3 shadow-[0_20px_45px_rgba(0,0,0,0.22)] md:p-6 lg:mx-0 lg:max-w-none">
+          <div className="mx-auto w-full max-w-[46rem] overflow-hidden rounded-2xl bg-white p-3 shadow-none md:p-6 md:shadow-[0_20px_45px_rgba(0,0,0,0.22)] lg:mx-0 lg:max-w-none">
             <iframe
               title="Contact Genius Sports"
               src="https://digital.geniussports.com/l/822433/2026-04-01/tzm3tn"
