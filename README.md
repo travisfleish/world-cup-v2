@@ -32,7 +32,7 @@ Open the local URL shown by Vite (typically `http://localhost:5173`).
 Routes are defined in `src/App.tsx`:
 
 - `/` -> `MarchMadnessMomentsPage`
-- `/march-madness-moments` -> `MarchMadnessMomentsPage`
+- `/world-cup-moments` -> `MarchMadnessMomentsPage`
 - `*` -> redirect to `/`
 
 ## Page Structure

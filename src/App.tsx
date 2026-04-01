@@ -11,10 +11,7 @@ function App() {
       {SHOW_SITE_HEADER ? <SiteHeader /> : null}
       <Routes>
         <Route path="/" element={<MarchMadnessMomentsPage />} />
-        <Route
-          path="/march-madness-moments"
-          element={<MarchMadnessMomentsPage />}
-        />
+        <Route path="/world-cup-moments" element={<MarchMadnessMomentsPage />} />
         <Route path="/iframe-test" element={<IframeTestPage />} />
         <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>

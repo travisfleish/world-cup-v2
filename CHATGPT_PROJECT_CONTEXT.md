@@ -5,7 +5,7 @@ Use it as the primary source of truth for architecture, data flow, behavior, sty
 
 ## 1) Project Overview
 
-- Project name: `march-madness-moments`
+- Project name: `world-cup-moments`
 - Type: Single-page React + TypeScript marketing experience
 - Build tool: Vite
 - Styling: Tailwind CSS + CSS variable token layer
@@ -43,7 +43,7 @@ NPM scripts:
   - Loads global CSS (`src/index.css`)
 - Routes: `src/App.tsx`
   - `/` -> `MarchMadnessMomentsPage`
-  - `/march-madness-moments` -> same page
+  - `/world-cup-moments` -> same page
   - `*` -> redirect to `/`
 
 This is a single-page routed app with one primary page component.

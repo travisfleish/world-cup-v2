@@ -63,7 +63,7 @@ function FanCloudComparisonSection({
   const [mobileFanIndex, setMobileFanIndex] = useState(0);
   const frameRef = useRef<HTMLDivElement | null>(null);
   const mobileFanCarouselRef = useRef<HTMLDivElement | null>(null);
-  const mobileFanCardRefs = useRef<Record<number, HTMLDivElement | null>>({});
+  const mobileFanCardRefs = useRef<Record<number, HTMLElement | null>>({});
   const rafRef = useRef<number | null>(null);
   const nudgeRafRef = useRef<number | null>(null);
   const pendingPercentRef = useRef<number>(50);
