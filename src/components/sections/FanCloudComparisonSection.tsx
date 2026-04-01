@@ -287,6 +287,7 @@ function FanCloudComparisonSection({
   const leftImageTranslateY = 0;
   const rightImageScale = 1.24;
   const rightImageTranslateY = 0;
+  const mobileFanImageZoom = 1.12;
   // Keep the Genius side visually readable at the neutral midpoint.
   const leftImageFilter = sliderPercent > 50 ? activeImageFilter : inactiveImageFilter;
   const rightImageFilter = sliderPercent <= 50 ? activeImageFilter : inactiveImageFilter;
@@ -358,7 +359,7 @@ function FanCloudComparisonSection({
 
             <div
               ref={mobileFanCarouselRef}
-              className="overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+              className="relative left-1/2 w-screen -translate-x-1/2 overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
             >
               <div className="flex w-full snap-x snap-mandatory gap-0">
                 {mobileFanCards.map((card, index) => (
@@ -367,9 +368,9 @@ function FanCloudComparisonSection({
                     ref={(node) => {
                       mobileFanCardRefs.current[index] = node;
                     }}
-                    className="w-full shrink-0 snap-start"
+                    className="w-screen shrink-0 snap-start"
                   >
-                    <p className="mb-2 px-1 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
+                    <p className="mb-4 px-5 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
                       {index === 1 && card.label === "How Genius Sports sees World Cup fans." ? (
                         <>
                           <span className="block">How Genius Sports sees</span>
@@ -379,19 +380,17 @@ function FanCloudComparisonSection({
                         card.label
                       )}
                     </p>
-                    <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85">
-                      <div className="relative aspect-[16/9] w-full">
-                        <img
-                          src={card.imageSrc}
-                          alt={card.label}
-                          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
-                          style={{
-                            transform: `translateY(${card.translateY}px) scale(${card.scale})`,
-                            transformOrigin: "center"
-                          }}
-                          draggable={false}
-                        />
-                      </div>
+                    <div className="relative aspect-[16/9] w-full overflow-hidden border-y border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85">
+                      <img
+                        src={card.imageSrc}
+                        alt={card.label}
+                        className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+                        style={{
+                          transform: `translateY(${card.translateY}px) scale(${card.scale * mobileFanImageZoom})`,
+                          transformOrigin: "center"
+                        }}
+                        draggable={false}
+                      />
                     </div>
                   </article>
                 ))}

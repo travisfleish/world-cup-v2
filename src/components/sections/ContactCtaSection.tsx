@@ -102,9 +102,9 @@ function ContactCtaSection() {
             <iframe
               title="Contact Genius Sports"
               src="https://digital.geniussports.com/l/822433/2026-04-01/tzm3tn"
-              className="h-[640px] w-full sm:h-[760px] md:h-[560px] lg:h-[640px] xl:h-[620px] 2xl:h-[620px]"
+              className="h-[820px] w-full sm:h-[760px] md:h-[560px] lg:h-[640px] xl:h-[620px] 2xl:h-[620px]"
               width="100%"
-              height="760"
+              height="820"
               frameBorder="0"
               allowTransparency={true}
               style={{ border: 0 }}
