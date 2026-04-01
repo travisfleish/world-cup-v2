@@ -16,9 +16,11 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
   const connectorStartDelayDesktop = reducedMotion ? 0 : 0.25;
   const singleCardFadeDelayDesktop = reducedMotion ? 0 : 0.55;
   const singleCardFadeDelayMobile = reducedMotion ? 0 : 0.42;
+  const argentinaCreativeSrc = "/comfystay-argentina.png";
   const [isBracketComplete, setIsBracketComplete] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [hasStartedAnimation, setHasStartedAnimation] = useState(reducedMotion);
+  const [bracketAnimationState, setBracketAnimationState] = useState(reducedMotion ? 3 : 0);
   const handleBracketComplete = useCallback(() => {
     if (typeof window === "undefined" || reducedMotion) {
       setIsBracketComplete(true);
@@ -34,6 +36,8 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
     : reducedMotion
       ? true
       : isBracketComplete;
+  const showArgentinaCreative = reducedMotion ? true : bracketAnimationState >= 2;
+  const showMexicoCreative = reducedMotion ? true : isBracketComplete;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -101,6 +105,7 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
           <div className="relative z-10 h-[400px] min-w-[860px] md:min-w-0">
             <MarchMadnessBracket
               onAnimationComplete={handleBracketComplete}
+              onAnimationStateChange={setBracketAnimationState}
               startAnimation={!isMobileViewport && hasStartedAnimation}
             />
           </div>
@@ -110,21 +115,10 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
           <div className="mt-0 md:hidden -mt-px h-[34rem]" aria-hidden="true" />
         )}
         {revealCreativeFlow && (
-          <div className="mt-0 md:hidden -mt-px">
-            <div className="flex flex-col items-center pt-2">
+          <div className="mt-0 -mt-px md:hidden">
+            <div className="flex flex-col items-center px-1 pt-2 sm:px-0">
               <motion.div
-                className="h-12 w-px bg-amber-400"
-                initial={{ scaleY: reducedMotion ? 1 : 0 }}
-                animate={{ scaleY: 1 }}
-                transition={{
-                  duration: connectorDrawDurationDesktop,
-                  delay: connectorStartDelayDesktop,
-                  ease: "easeInOut"
-                }}
-                style={{ transformOrigin: "top" }}
-              />
-              <motion.div
-                className="mt-3 grid w-full max-w-[42rem] grid-cols-1 gap-8"
+                className="mt-3 grid w-full max-w-[42rem] grid-cols-1 gap-5"
                 initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
                 animate={{ opacity: 1, y: 0 }}
                 transition={{
@@ -133,110 +127,113 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
                   delay: singleCardFadeDelayMobile
                 }}
               >
-                <div className="mx-auto flex w-full max-w-[760px] flex-col items-center text-center">
+                <motion.div
+                  className="mx-auto flex w-full max-w-[680px] flex-col items-center"
+                  initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: reducedMotion ? 0.1 : 0.3, ease: "easeOut", delay: reducedMotion ? 0 : 0.08 }}
+                >
+                  <p className="text-center font-heading text-sm font-medium text-slate-900 md:text-base">
+                    Argentina Advances:
+                  </p>
                   <img
-                    src="/genius-assets/media-science-logo.png"
-                    alt="MediaScience"
-                    className="h-auto w-full max-w-[220px]"
-                  />
-                  <div
-                    className="mt-6 w-full text-slate-900"
-                    style={{
-                      fontFamily:
-                        'ESKlarheitKurrentTRIAL, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
-                      fontFeatureSettings: "normal",
-                      fontVariationSettings: "normal",
-                      fontSize: "30px",
-                      letterSpacing: "-0.225px",
-                      lineHeight: "42px"
-                    }}
-                  >
-                    <p>
-                      <span className="text-[#8DB12D]">Surprise</span>, intensity, and{" "}
-                      <span className="text-[#8DB12D]">game outcome</span> meaningfully influence memory and ad effectiveness during
-                      live sports viewing.
-                    </p>
-                    <p className="mt-6">
-                      Brand recall was <span className="text-[#8DB12D]">2x higher</span> following moments of
-                      &nbsp;&lsquo;surprise&rsquo; compared with &nbsp;&lsquo;expected&rsquo; moments.
-                    </p>
-                  </div>
-                </div>
-                <div className="mx-auto w-full max-w-[700px]">
-                  <img
-                    src={data.leftCardImageSrc}
-                    alt={data.leftCardTitle}
-                    className="block h-auto w-full"
+                    src={argentinaCreativeSrc}
+                    alt="Comfy Stay Argentina celebration creative"
+                    className="mt-2 block h-auto w-full rounded-xl"
                     loading="lazy"
                     draggable={false}
                   />
-                </div>
+                </motion.div>
+                <motion.div
+                  className="mx-auto flex w-full max-w-[680px] flex-col items-center"
+                  initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ duration: reducedMotion ? 0.1 : 0.3, ease: "easeOut", delay: reducedMotion ? 0 : 0.45 }}
+                >
+                  <p className="text-center font-heading text-sm font-medium text-slate-900 md:text-base">
+                    Mexico Advances:
+                  </p>
+                  <img
+                    src={data.leftCardImageSrc}
+                    alt={data.leftCardTitle}
+                    className="mt-2 block h-auto w-full rounded-xl"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                </motion.div>
               </motion.div>
             </div>
           </div>
         )}
 
-        <div className="mt-0 hidden md:block -mt-px min-h-[28rem]">
-          <div className="relative mx-auto h-16 w-full max-w-5xl" aria-hidden="true">
-            <svg viewBox="0 0 100 64" className="h-full w-full">
-              <motion.path
-                d="M 50 0 V 63"
-                fill="none"
-                stroke="#eab308"
-                strokeWidth="1.9"
-                strokeLinecap="round"
-                strokeLinejoin="round"
-                initial={{ pathLength: reducedMotion ? 1 : 0 }}
-                animate={{ pathLength: revealCreativeFlow ? 1 : 0 }}
+        <div className="mt-0 hidden -mt-px md:block md:min-h-[16rem] lg:min-h-[22rem] xl:min-h-[24rem]">
+          <div className="mx-auto flex w-full max-w-[1120px] items-start justify-between gap-8">
+            <div className="flex flex-col items-center">
+              <motion.div
+                className="h-12 w-px bg-amber-400"
+                initial={{ scaleY: reducedMotion ? 1 : 0, opacity: reducedMotion ? 1 : 0 }}
+                animate={
+                  showArgentinaCreative
+                    ? { scaleY: 1, opacity: 1 }
+                    : { scaleY: reducedMotion ? 1 : 0, opacity: reducedMotion ? 1 : 0 }
+                }
                 transition={{
                   duration: connectorDrawDurationDesktop,
-                  delay: connectorStartDelayDesktop,
+                  delay: reducedMotion ? 0 : Math.max(0, singleCardFadeDelayDesktop - connectorStartDelayDesktop),
                   ease: "easeInOut"
                 }}
+                style={{ transformOrigin: "top" }}
+                aria-hidden="true"
               />
-            </svg>
-          </div>
-          <div className="mx-auto mt-1 w-full max-w-6xl">
-            <motion.div
-              className="mt-3 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12"
-              initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
-              animate={revealCreativeFlow ? { opacity: 1, y: 0 } : { opacity: 0, y: reducedMotion ? 0 : 8 }}
-              transition={{
-                duration: reducedMotion ? 0.1 : 0.3,
-                ease: "easeOut",
-                delay: singleCardFadeDelayDesktop
-              }}
-            >
-              <div className="mx-auto flex w-full max-w-[760px] flex-col items-center text-center lg:items-start lg:text-left">
+              <motion.div
+                className="mt-3 w-full max-w-[520px]"
+                initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
+                animate={showArgentinaCreative ? { opacity: 1, y: 0 } : { opacity: 0, y: reducedMotion ? 0 : 10 }}
+                transition={{
+                  duration: reducedMotion ? 0.1 : 0.35,
+                  ease: "easeOut",
+                  delay: reducedMotion ? 0 : singleCardFadeDelayDesktop
+                }}
+              >
                 <img
-                  src="/genius-assets/media-science-logo.png"
-                  alt="MediaScience"
-                  className="h-auto w-full max-w-[220px] md:max-w-[260px]"
+                  src={argentinaCreativeSrc}
+                  alt="Comfy Stay Argentina celebration creative"
+                  className="block h-auto w-full"
+                  loading="lazy"
+                  draggable={false}
                 />
-                <div
-                  className="mt-8 w-full text-slate-900 md:mt-10"
-                  style={{
-                    fontFamily:
-                      'ESKlarheitKurrentTRIAL, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
-                    fontFeatureSettings: "normal",
-                    fontVariationSettings: "normal",
-                    fontSize: "30px",
-                    letterSpacing: "-0.225px",
-                    lineHeight: "42px"
-                  }}
-                >
-                  <p>
-                    <span className="text-[#8DB12D]">Surprise</span>, intensity, and{" "}
-                    <span className="text-[#8DB12D]">game outcome</span> meaningfully influence memory and ad effectiveness during
-                    live sports viewing.
-                  </p>
-                  <p className="mt-6">
-                    Brand recall was <span className="text-[#8DB12D]">2x higher</span> following moments of
-                    &nbsp;&lsquo;surprise&rsquo; compared with &nbsp;&lsquo;expected&rsquo; moments.
-                  </p>
-                </div>
-              </div>
-              <div className="mx-auto w-full max-w-[700px]">
+              </motion.div>
+            </div>
+
+            <div className="flex flex-col items-center">
+              <motion.div
+                className="h-12 w-px bg-amber-400"
+                initial={{ scaleY: reducedMotion ? 1 : 0, opacity: reducedMotion ? 1 : 0 }}
+                animate={
+                  showMexicoCreative
+                    ? { scaleY: 1, opacity: 1 }
+                    : { scaleY: reducedMotion ? 1 : 0, opacity: reducedMotion ? 1 : 0 }
+                }
+                transition={{
+                  duration: connectorDrawDurationDesktop,
+                  delay: reducedMotion
+                    ? 0
+                    : Math.max(0, singleCardFadeDelayDesktop + 0.18 - connectorStartDelayDesktop),
+                  ease: "easeInOut"
+                }}
+                style={{ transformOrigin: "top" }}
+                aria-hidden="true"
+              />
+              <motion.div
+                className="mt-3 w-full max-w-[520px]"
+                initial={{ opacity: 0, y: reducedMotion ? 0 : 10 }}
+                animate={showMexicoCreative ? { opacity: 1, y: 0 } : { opacity: 0, y: reducedMotion ? 0 : 10 }}
+                transition={{
+                  duration: reducedMotion ? 0.1 : 0.35,
+                  ease: "easeOut",
+                  delay: reducedMotion ? 0 : singleCardFadeDelayDesktop + 0.18
+                }}
+              >
                 <img
                   src={data.leftCardImageSrc}
                   alt={data.leftCardTitle}
@@ -244,8 +241,8 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
                   loading="lazy"
                   draggable={false}
                 />
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
           </div>
         </div>
       </div>

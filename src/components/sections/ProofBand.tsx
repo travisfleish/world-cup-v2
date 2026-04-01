@@ -24,8 +24,8 @@ function ProofBand({ body, chart }: ProofBandProps) {
       id="proof"
       className="relative w-screen max-w-none [margin-left:calc(50%-50vw)] scroll-mt-24 overflow-hidden bg-white"
     >
-      <div className="mx-auto w-full max-w-6xl px-5 py-14 md:px-10 md:py-20">
-        <div className="relative overflow-hidden rounded-2xl border border-white/25 px-5 py-16 md:px-8 md:py-24">
+      <div className="mx-auto w-full max-w-6xl px-3 py-1 md:px-10 md:py-3">
+        <div className="relative overflow-hidden rounded-2xl border border-white/25 px-4 py-16 md:px-8 md:py-24">
           <div
             className="absolute inset-0 bg-cover bg-center"
             style={{ backgroundImage: "url('/proof_bg.png')" }}

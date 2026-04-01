@@ -55,7 +55,7 @@ const momentDetailsByLabel: Record<string, { signal: string; emotion: string; de
     description:
       "Activates when teams give their fans hope and something to look forward to in the next stage of the World Cup, delivering relief and bragging rights to fans who were feeling down."
   },
-  "ELIMINATION: ELIMINATION": {
+  "ELIMINATION": {
     signal: "Losses during the World Cup that put teams mathematically out of contention",
     emotion: "Disgust/Anger",
     description:
@@ -113,21 +113,21 @@ function MomentsSection({
           />
         </div>
 
-        <div className="relative z-10 px-8 pb-8 pt-4 md:px-10 md:pb-10 md:pt-6">
+        <div className="relative z-10 px-4 pb-6 pt-4 sm:px-6 md:px-10 md:pb-10 md:pt-6">
           <h2 className="section-title">{header}</h2>
           <div className="mt-4 max-w-3xl space-y-3">
             {introParagraph1 !== header ? (
-              <p className="m-0 font-sans text-base leading-[1.45] tracking-[-0.01125em] text-[var(--gs-text-muted)]">
+              <p className="m-0 font-sans text-[0.98rem] leading-[1.45] tracking-[-0.01125em] text-[var(--gs-text-muted)] md:text-base">
                 {introParagraph1}
               </p>
             ) : null}
-            <p className="m-0 font-sans text-base leading-[1.45] tracking-[-0.01125em] text-[var(--gs-text-muted)]">
+            <p className="m-0 font-sans text-[0.98rem] leading-[1.45] tracking-[-0.01125em] text-[var(--gs-text-muted)] md:text-base">
               {renderHighlightedIntro(introParagraph2)}
             </p>
           </div>
         </div>
 
-        <div className="relative z-10 px-8 pb-8 md:px-10 md:pb-10">
+        <div className="relative z-10 px-4 pb-6 sm:px-6 md:px-10 md:pb-10">
           <MomentsAccordion labels={filteredLabels} detailsByLabel={momentDetailsByLabel} />
         </div>
       </div>

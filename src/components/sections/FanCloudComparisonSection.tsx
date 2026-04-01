@@ -37,6 +37,12 @@ function snapPercent(value: number) {
   return Math.abs(nearest - value) <= 11 ? nearest : value;
 }
 
+function rebalanceMobileHeadline(text: string) {
+  const normalized = text.replace(/World Cup\s*\n\s*Fans\b/, "World Cup Fans\n");
+  const withGeniusOnOwnLine = normalized.replace(/\s+Genius Sports\b/, "\nGenius Sports");
+  return withGeniusOnOwnLine.replace(/\n{2,}/g, "\n").trim();
+}
+
 function FanCloudComparisonSection({
   headline,
   leftLabel,
@@ -54,7 +60,10 @@ function FanCloudComparisonSection({
   const [isHandleFocused, setIsHandleFocused] = useState(false);
   const [hasInteracted, setHasInteracted] = useState(false);
   const [showHelperHint, setShowHelperHint] = useState(true);
+  const [mobileFanIndex, setMobileFanIndex] = useState(0);
   const frameRef = useRef<HTMLDivElement | null>(null);
+  const mobileFanCarouselRef = useRef<HTMLDivElement | null>(null);
+  const mobileFanCardRefs = useRef<Record<number, HTMLDivElement | null>>({});
   const rafRef = useRef<number | null>(null);
   const nudgeRafRef = useRef<number | null>(null);
   const pendingPercentRef = useRef<number>(50);
@@ -281,6 +290,30 @@ function FanCloudComparisonSection({
   // Keep the Genius side visually readable at the neutral midpoint.
   const leftImageFilter = sliderPercent > 50 ? activeImageFilter : inactiveImageFilter;
   const rightImageFilter = sliderPercent <= 50 ? activeImageFilter : inactiveImageFilter;
+  const mobileFanCards = [
+    { label: leftLabel, imageSrc: leftImageSrc, translateY: leftImageTranslateY, scale: leftImageScale },
+    { label: rightLabel, imageSrc: rightImageSrc, translateY: rightImageTranslateY, scale: rightImageScale }
+  ];
+
+  const focusMobileFanCard = (index: number, behavior: ScrollBehavior = "smooth") => {
+    const nextIndex = Math.max(0, Math.min(index, mobileFanCards.length - 1));
+    setMobileFanIndex(nextIndex);
+
+    const carouselNode = mobileFanCarouselRef.current;
+    const cardNode = mobileFanCardRefs.current[nextIndex];
+    if (!carouselNode || !cardNode) return;
+
+    cardNode.scrollIntoView({
+      behavior,
+      inline: "start",
+      block: "nearest"
+    });
+  };
+
+  const moveMobileFanCard = (direction: "left" | "right") => {
+    const nextIndex = direction === "left" ? mobileFanIndex - 1 : mobileFanIndex + 1;
+    focusMobileFanCard(nextIndex);
+  };
 
   return (
     <section
@@ -289,61 +322,81 @@ function FanCloudComparisonSection({
     >
       <div className="mx-auto w-full max-w-[1320px] px-5 pt-2 pb-10 md:px-8 md:pt-8 md:pb-14 lg:px-10 lg:pt-10 lg:pb-16">
         <h2 className="mx-auto text-center font-heading font-normal tracking-tight text-slate-900">
-          <span className="text-2xl leading-[1.04] md:hidden">
-            {renderHeadlineWithHighlight(headline)}
+          <span className="text-[1.78rem] leading-[1.06] md:hidden">
+            {renderHeadlineWithHighlight(rebalanceMobileHeadline(headline))}
           </span>
           <span className="hidden text-4xl leading-[1.04] md:inline lg:text-5xl">
             {renderHeadlineWithHighlight(headline)}
           </span>
         </h2>
         <div className="mt-8 md:mt-10">
-          <div className="mx-auto grid w-full max-w-[1200px] gap-4 md:hidden">
-            <article>
-              <p className="mb-2 px-1 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
-                {leftLabel}
-              </p>
-              <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85 shadow-[0_14px_28px_rgba(15,23,42,0.2)] backdrop-blur-[2px]">
-                <div className="relative aspect-[16/9] w-full">
-                  <img
-                    src={leftImageSrc}
-                    alt={leftLabel}
-                    className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
-                  style={{
-                    transform: `translateY(${leftImageTranslateY}px) scale(${leftImageScale})`,
-                    transformOrigin: "center"
-                  }}
-                    draggable={false}
-                  />
-                </div>
-              </div>
-            </article>
+          <div className="mx-auto max-w-[1200px] md:hidden">
+            <div className="mb-3 flex items-center justify-center gap-2">
+              <button
+                type="button"
+                onClick={() => moveMobileFanCard("left")}
+                disabled={mobileFanIndex <= 0}
+                aria-label="Scroll fan images left"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <span aria-hidden="true" className="text-lg leading-none">
+                  ←
+                </span>
+              </button>
+              <button
+                type="button"
+                onClick={() => moveMobileFanCard("right")}
+                disabled={mobileFanIndex >= mobileFanCards.length - 1}
+                aria-label="Scroll fan images right"
+                className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+              >
+                <span aria-hidden="true" className="text-lg leading-none">
+                  →
+                </span>
+              </button>
+            </div>
 
-            <article>
-              <p className="mb-2 px-1 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
-                {rightLabel === "How Genius Sports sees World Cup fans." ? (
-                  <>
-                    <span className="block">How Genius Sports sees</span>
-                    <span className="block">World Cup fans.</span>
-                  </>
-                ) : (
-                  rightLabel
-                )}
-              </p>
-              <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85 shadow-[0_14px_28px_rgba(15,23,42,0.2)] backdrop-blur-[2px]">
-              <div className="relative aspect-[16/9] w-full">
-                <img
-                  src={rightImageSrc}
-                  alt={rightLabel}
-                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
-                  style={{
-                    transform: `translateY(${rightImageTranslateY}px) scale(${rightImageScale})`,
-                    transformOrigin: "center"
-                  }}
-                  draggable={false}
-                />
+            <div
+              ref={mobileFanCarouselRef}
+              className="overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+            >
+              <div className="flex w-full snap-x snap-mandatory gap-0">
+                {mobileFanCards.map((card, index) => (
+                  <article
+                    key={`mobile-fan-card-${index}`}
+                    ref={(node) => {
+                      mobileFanCardRefs.current[index] = node;
+                    }}
+                    className="w-full shrink-0 snap-start"
+                  >
+                    <p className="mb-2 px-1 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
+                      {index === 1 && card.label === "How Genius Sports sees World Cup fans." ? (
+                        <>
+                          <span className="block">How Genius Sports sees</span>
+                          <span className="block">World Cup fans.</span>
+                        </>
+                      ) : (
+                        card.label
+                      )}
+                    </p>
+                    <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85">
+                      <div className="relative aspect-[16/9] w-full">
+                        <img
+                          src={card.imageSrc}
+                          alt={card.label}
+                          className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+                          style={{
+                            transform: `translateY(${card.translateY}px) scale(${card.scale})`,
+                            transformOrigin: "center"
+                          }}
+                          draggable={false}
+                        />
+                      </div>
+                    </div>
+                  </article>
+                ))}
               </div>
-              </div>
-            </article>
+            </div>
           </div>
 
           <div

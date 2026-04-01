@@ -44,11 +44,13 @@ const CONFETTI_PARTICLES = [
 
 type MarchMadnessBracketProps = {
   onAnimationComplete?: () => void;
+  onAnimationStateChange?: (state: number) => void;
   startAnimation?: boolean;
 };
 
 export function MarchMadnessBracket({
   onAnimationComplete,
+  onAnimationStateChange,
   startAnimation = true
 }: MarchMadnessBracketProps) {
   const [animationState, setAnimationState] = useState(0);
@@ -70,6 +72,10 @@ export function MarchMadnessBracket({
 
     return () => timers.forEach((timer) => window.clearTimeout(timer));
   }, [onAnimationComplete, startAnimation]);
+
+  useEffect(() => {
+    onAnimationStateChange?.(animationState);
+  }, [animationState, onAnimationStateChange]);
 
   // Calculate vertical positions
   const round1Card1Top = 0;

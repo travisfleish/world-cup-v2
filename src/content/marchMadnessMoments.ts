@@ -220,7 +220,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
       "CINDERELLA STORIES: NEW COMPETITORS",
       "COMEBACK STORIES: RETURNING NATIONS",
       "ADVANCEMENT: WINNING MOMENTS",
-      "ELIMINATION: ELIMINATION",
+      "ELIMINATION",
       "SET PIECE GOALS: SCORING PLAYS",
       "SHOOT-OUTS"
     ],
@@ -235,13 +235,13 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     popularHeader: "Popular World Cup Audiences",
     audienceGroups: [
       {
-        title: "League & Competition Fans",
+        title: "League & Competition Fans:",
         description:
           "Broad reach among global soccer audiences leading up to and during the tournament.",
         audiences: ["Soccer Fans", "International Soccer Fans", "Hispanic Die Hards"]
       },
       {
-        title: "National Team Fans",
+        title: "National Team Fans:",
         description: "Connect with fans supporting specific countries and national teams.",
         audiences: [
           "USA National Team Fans",
@@ -251,9 +251,14 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
         ]
       },
       {
-        title: "Event Fans",
-        description: "Align brand messaging with one of the largest global sporting events.",
-        audiences: ["FIFA World Cup Fans", "International Sports Fans", "Big Sports Event Goers"]
+        title: "Customize by:",
+        description: "",
+        audiences: [
+          "Demographic + psychographic attributes",
+          "Category/brand purchase behavior across 5K+ brands",
+          "Category/brand purchase frequency across 5K+ brands",
+          "100+ Fluid Fan communities such as Values-Driven Fans, Gen Z fans, Sober Curious Fans"
+        ]
       }
     ]
   },
@@ -262,9 +267,8 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     paragraph:
       "With Genius Sports AI-driven dynamic creative optimization engine, advertisers can tailor their message to each moment, whether it’s a comeback, a buzzer beater, or a championship celebration. Select content can be pushed across channels, including CTV, OTT, and digital.",
     creativeViz: {
-      triggerTitle: "Moment Trigger: Championship Celebration",
+      triggerTitle: "Moment Trigger: Tournament Advancement",
       exampleLabel: "Example Event:",
-      exampleEvent: "Mexico wins the World Cup",
       leftAudienceLabel: "World Cup Fans + Existing Brand Purchaser",
       leftCardTitle: "CREATIVE MESSAGE A",
       leftCardImageSrc: "/comfystay.png",

@@ -28,11 +28,6 @@ const DESKTOP_TILE_CLASSES: Record<"sm" | "md" | "lg", string> = {
   lg: "col-span-8 min-h-[5.7rem] rounded-2xl p-3 md:min-h-[7.75rem] md:p-5 lg:col-span-8 lg:row-span-1 lg:min-h-0 lg:p-7"
 };
 
-function parseNumericStat(value: string) {
-  const parsed = Number.parseInt(value.replace(/[^\d-]/g, ""), 10);
-  return Number.isNaN(parsed) ? null : parsed;
-}
-
 function renderTitleWithWorldCupAccent(line: string) {
   return line.split(/(World|Cup)/g).map((segment, index) =>
     segment === "World" || segment === "Cup" ? (
@@ -60,7 +55,6 @@ function HeroSection({
   const [isLoaded, setIsLoaded] = useState(false);
   const [rollVersions, setRollVersions] = useState<Record<string, number>>({});
   const [hideDesktopStatPanel, setHideDesktopStatPanel] = useState(false);
-  const numericSideValue = parseNumericStat(sideBarStat.value);
   const sideBarRollId = `${sideBarStat.value}-${sideBarStat.label}-sidebar`;
 
   useEffect(() => {
@@ -142,7 +136,7 @@ function HeroSection({
 
   return (
     <section className="relative w-full overflow-hidden bg-white">
-      <div className="pointer-events-none absolute bottom-0 right-0 hidden h-[60%] w-[42%] md:block" aria-hidden>
+      <div className="pointer-events-none absolute bottom-0 right-0 hidden h-[60%] w-[42%] lg:block" aria-hidden>
         <img
           src="/genius-assets/green-lines.png"
           alt=""
@@ -150,24 +144,24 @@ function HeroSection({
         />
         <div className="absolute inset-0 bg-gradient-to-l from-transparent via-transparent to-white" />
       </div>
-      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-6 pt-10 pb-3 md:px-9 md:pt-10 md:pb-6 lg:max-h-[min(90vh,820px)] lg:px-12 lg:pt-12 lg:pb-6">
-        <div className="relative grid min-h-0 items-center gap-10 lg:grid-cols-[45%_55%] lg:items-center lg:gap-0">
+      <div className="relative z-10 mx-auto w-full max-w-[1200px] px-4 pb-4 pt-8 sm:px-6 md:px-9 md:pb-6 md:pt-10 lg:max-h-[min(90vh,820px)] lg:px-12 lg:pt-12 lg:pb-6">
+        <div className="relative grid min-h-0 items-center gap-7 sm:gap-8 lg:grid-cols-[45%_55%] lg:items-center lg:gap-0">
           <div
             aria-hidden
             className="pointer-events-none absolute inset-y-8 left-[45%] hidden w-px -translate-x-1/2 bg-[#0A1330]/12 lg:block"
           />
           <motion.div
-            className="flex min-h-0 flex-col items-center justify-center pr-2 md:min-h-[18rem] md:pr-6 lg:min-h-[22rem] lg:pr-14"
+            className="flex min-h-0 flex-col items-center justify-center pr-0 md:min-h-[18rem] md:pr-6 lg:min-h-[22rem] lg:pr-14"
             initial={{ opacity: reducedMotion ? 1 : 0 }}
             animate={{ opacity: isLoaded || reducedMotion ? 1 : 0 }}
             transition={{ duration: reducedMotion ? 0 : 0.3, ease: "easeOut" }}
           >
-            <div className="mx-auto w-full max-w-[60ch] text-left">
-              <span className="mb-0 inline-block font-heading font-book text-[15px] leading-[21.75px] tracking-[-0.140625px] opacity-80">
+            <div className="mx-auto w-full max-w-[60ch] text-center lg:mx-0 lg:text-left">
+              <span className="mb-1 inline-block whitespace-nowrap font-heading font-book text-[12px] leading-[1.35] tracking-[-0.01em] opacity-80 md:mb-0 md:text-[15px] md:leading-[21.75px] md:tracking-[-0.140625px]">
                 {kicker}
               </span>
               {hasHeadlineLines ? (
-                <p className="mt-4 max-w-[24ch] text-[clamp(1.05rem,1.7vw,2rem)] font-medium leading-[1.04] tracking-[-0.01em] text-[#0A1330]">
+                <p className="mx-auto mt-4 max-w-[24ch] text-[clamp(1.05rem,1.7vw,2rem)] font-medium leading-[1.04] tracking-[-0.01em] text-[#0A1330] lg:mx-0">
                   {(headlineLines ?? []).map((line) => (
                     <span key={line} className="block">
                       {line}
@@ -176,21 +170,15 @@ function HeroSection({
                 </p>
               ) : null}
               <h1
-                className={`-ml-[0.02em] text-[72px] leading-[77.76px] tracking-[-2.16px] font-[300] text-[var(--gs-text)] [font-family:ESKlarheitKurrentTRIAL,_system-ui,_-apple-system,_"Segoe_UI",_Roboto,_Helvetica,_Arial,_sans-serif,_"Apple_Color_Emoji",_"Segoe_UI_Emoji"] [font-feature-settings:normal] [font-variation-settings:normal] md:mt-5 ${hasHeadlineLines ? "mt-4" : "mt-0"}`}
+                className={`-ml-[0.01em] text-[clamp(2.65rem,16vw,4.5rem)] font-[300] leading-[0.96] tracking-[-0.04em] text-[var(--gs-text)] [font-family:ESKlarheitKurrentTRIAL,_system-ui,_-apple-system,_"Segoe_UI",_Roboto,_Helvetica,_Arial,_sans-serif,_"Apple_Color_Emoji",_"Segoe_UI_Emoji"] [font-feature-settings:normal] [font-variation-settings:normal] md:mt-5 md:text-[72px] md:leading-[77.76px] md:tracking-[-2.16px] ${hasHeadlineLines ? "mt-4" : "mt-2 md:mt-3"}`}
               >
-                <span className="block">
-                  {renderTitleWithWorldCupAccent(titleLines[0] ?? "")}
-                </span>
-                <span className="flex items-end gap-2 md:gap-3">
-                  <span>
-                    {renderTitleWithWorldCupAccent(titleLines[1] ?? "")}
-                  </span>
-                  <span>
-                    {renderTitleWithWorldCupAccent(titleLines[2] ?? "")}
-                  </span>
+                <span className="inline-flex flex-col items-center gap-0 text-center md:flex-row md:items-end md:gap-3 md:whitespace-nowrap lg:flex-col lg:items-start lg:gap-0 lg:text-left lg:whitespace-normal">
+                  <span>{renderTitleWithWorldCupAccent(titleLines[0] ?? "")}</span>
+                  <span>{renderTitleWithWorldCupAccent(titleLines[1] ?? "")}</span>
+                  {titleLines[2] ? <span>{renderTitleWithWorldCupAccent(titleLines[2])}</span> : null}
                 </span>
               </h1>
-              <p className="mt-4 w-full max-w-none text-base font-normal leading-relaxed text-[#0A1330] md:mt-5 md:text-[1.02rem] lg:mt-3 lg:text-[1.08rem]">
+              <p className="mx-auto mt-4 w-full max-w-[54ch] text-[0.98rem] font-normal leading-relaxed text-[#0A1330] md:mt-5 md:max-w-[50ch] md:text-[1.02rem] lg:mx-0 lg:mt-3 lg:max-w-[54ch] lg:text-[1.08rem]">
                 {subhead}
               </p>
               {ctaButtonText ? (
@@ -202,13 +190,27 @@ function HeroSection({
                   >
                     <span className="relative cursor-pointer overflow-hidden rounded-full bg-[#0d1226]">
                       <GeniusStripHoverBg />
-                      <span className='relative left-0 z-20 inline-flex h-[54.3906px] w-[219px] items-center justify-center rounded-full px-[36px] text-center text-[17px] font-normal leading-[20.4px] tracking-[-0.180625px] text-white transition-colors duration-300 ease-in-out [font-family:ESKlarheitKurrentTRIAL,_system-ui,_-apple-system,_"Segoe_UI",_Roboto,_Helvetica,_Arial,_sans-serif,_"Apple_Color_Emoji",_"Segoe_UI_Emoji"] [font-feature-settings:normal] [font-variation-settings:normal]'>
+                      <span className='relative left-0 z-20 inline-flex h-[52px] w-[min(100%,219px)] items-center justify-center rounded-full px-8 text-center text-[16px] font-normal leading-[20px] tracking-[-0.16px] text-white transition-colors duration-300 ease-in-out [font-family:ESKlarheitKurrentTRIAL,_system-ui,_-apple-system,_"Segoe_UI",_Roboto,_Helvetica,_Arial,_sans-serif,_"Apple_Color_Emoji",_"Segoe_UI_Emoji"] [font-feature-settings:normal] [font-variation-settings:normal] md:h-[54.3906px] md:text-[17px] md:leading-[20.4px] md:tracking-[-0.180625px]'>
                         {ctaButtonText}
                       </span>
                     </span>
                   </a>
                 </div>
               ) : null}
+              <div className="mt-7 grid grid-cols-2 gap-2.5 text-left lg:hidden">
+                {[...stats, sideBarStat].map((stat) => (
+                  <article
+                    key={`${stat.value}-${stat.label}`}
+                    className="rounded-xl bg-[#0014ff] p-3 text-white ring-1 ring-white/25"
+                  >
+                    <p className="text-[1.45rem] font-medium leading-[0.92]">{stat.value}</p>
+                    {stat.label ? (
+                      <p className="mt-0.5 text-[0.82rem] font-medium leading-tight text-white/95">{stat.label}</p>
+                    ) : null}
+                    <p className="mt-1.5 text-[0.66rem] leading-snug text-blue-50/90">{stat.description}</p>
+                  </article>
+                ))}
+              </div>
             </div>
           </motion.div>
           <motion.div
@@ -229,7 +231,6 @@ function HeroSection({
               <div className="grid auto-rows-auto grid-cols-8 gap-2 md:gap-3 lg:min-h-0 lg:h-full lg:grid-rows-3">
               {stats.map((stat, index) => {
                 const tileSize = stat.size ?? "md";
-                const numericStatValue = parseNumericStat(stat.value);
                 const statRollId = `${stat.value}-${stat.label}-${index}`;
                 const isFirstStatTile = index === 0;
                 const isSecondStatTile = index === 1;

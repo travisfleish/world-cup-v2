@@ -13,11 +13,28 @@ type MomentsAccordionProps = {
   detailsByLabel: Record<string, MomentDetails>;
 };
 
+const minorTitleCaseWords = new Set(["a", "an", "and", "as", "at", "by", "for", "in", "of", "on", "or", "the", "to"]);
+
 function toTitleCase(value: string) {
-  return value
-    .toLowerCase()
-    .split(/\s+/)
-    .map((word) => (word ? `${word[0].toUpperCase()}${word.slice(1)}` : ""))
+  const words = value.toLowerCase().split(/\s+/);
+  let wordIndex = 0;
+
+  return words
+    .map((word) => {
+      const isHyphenatedWord = word.includes("-");
+      return (
+      word
+        .split(/([/:-])/)
+        .map((part) => {
+          if (!part || /[/:-]/.test(part)) return part;
+          const isFirstWord = wordIndex === 0;
+          wordIndex += 1;
+          if (!isHyphenatedWord && !isFirstWord && minorTitleCaseWords.has(part)) return part;
+          return `${part[0].toUpperCase()}${part.slice(1)}`;
+        })
+        .join("")
+      );
+    })
     .join(" ");
 }
 
@@ -38,253 +55,179 @@ function PlusMinusIcon({ isOpen }: { isOpen: boolean }) {
 
 function MomentsAccordion({ labels, detailsByLabel }: MomentsAccordionProps) {
   const reducedMotion = useReducedMotionSafe();
-  const [mobileOpenId, setMobileOpenId] = useState<string | null>(null);
-  const mobileItemRefs = useRef<Record<string, HTMLDivElement | null>>({});
-  const mobileExtraWrapperRef = useRef<HTMLDivElement | null>(null);
-  const cinderellaIndex = labels.findIndex((label) => label.toUpperCase() === "CINDERELLA STORY");
-  const mobileSplitIndex = cinderellaIndex === -1 ? labels.length : cinderellaIndex;
-  const mobileButtonLabels = labels.slice(0, mobileSplitIndex);
-  const mobileExtraLabels = labels.slice(mobileSplitIndex);
-  const [isMobileExpanded, setIsMobileExpanded] = useState(false);
+  const [mobileActiveId, setMobileActiveId] = useState<string | null>(null);
+  const [mobileFocusedId, setMobileFocusedId] = useState<string | null>(labels[0] ?? null);
+  const mobileCarouselRef = useRef<HTMLDivElement | null>(null);
+  const mobileButtonRefs = useRef<Record<string, HTMLButtonElement | null>>({});
   const [openIdsByColumn, setOpenIdsByColumn] = useState<Record<number, string | null>>({
     0: null,
     1: null
   });
   const midpoint = Math.ceil(labels.length / 2);
   const labelColumns = [labels.slice(0, midpoint), labels.slice(midpoint)];
+  const activeMobileIndex = mobileActiveId ? labels.indexOf(mobileActiveId) : -1;
+  const focusedMobileIndex = mobileFocusedId ? labels.indexOf(mobileFocusedId) : -1;
 
   useEffect(() => {
-    if (typeof window === "undefined" || !mobileOpenId) {
+    if (!labels.length) {
+      setMobileActiveId(null);
+      setMobileFocusedId(null);
       return;
     }
 
-    const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
-    if (!isMobileViewport) {
+    if (mobileActiveId && !labels.includes(mobileActiveId)) {
+      setMobileActiveId(null);
+    }
+
+    if (!mobileFocusedId || !labels.includes(mobileFocusedId)) {
+      setMobileFocusedId(labels[0]);
+    }
+  }, [labels, mobileActiveId, mobileFocusedId]);
+
+  const focusMobileMoment = (label: string, behavior: ScrollBehavior = "smooth") => {
+    setMobileFocusedId(label);
+
+    const carouselNode = mobileCarouselRef.current;
+    const buttonNode = mobileButtonRefs.current[label];
+    if (!carouselNode || !buttonNode) return;
+
+    buttonNode.scrollIntoView({
+      behavior,
+      inline: "center",
+      block: "nearest"
+    });
+  };
+
+  const moveActiveMoment = (direction: "left" | "right") => {
+    if (!labels.length) return;
+    if (focusedMobileIndex === -1) {
+      focusMobileMoment(labels[0]);
       return;
     }
 
-    const openItemNode = mobileItemRefs.current[mobileOpenId];
-    if (!openItemNode) {
-      return;
+    const currentIndex = focusedMobileIndex;
+    const nextIndex =
+      direction === "left"
+        ? Math.max(0, currentIndex - 1)
+        : Math.min(labels.length - 1, currentIndex + 1);
+    const nextLabel = labels[nextIndex];
+    if (!nextLabel) return;
+
+    focusMobileMoment(nextLabel);
+    if (mobileActiveId) {
+      setMobileActiveId(nextLabel);
     }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) {
-          setMobileOpenId((current) => (current === mobileOpenId ? null : current));
-        }
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(openItemNode);
-    return () => observer.disconnect();
-  }, [mobileOpenId]);
-
-  useEffect(() => {
-    if (typeof window === "undefined" || !isMobileExpanded) {
-      return;
-    }
-
-    const isMobileViewport = window.matchMedia("(max-width: 767px)").matches;
-    if (!isMobileViewport) {
-      return;
-    }
-
-    const extraWrapperNode = mobileExtraWrapperRef.current;
-    if (!extraWrapperNode) {
-      return;
-    }
-
-    const observer = new IntersectionObserver(
-      ([entry]) => {
-        if (!entry?.isIntersecting) {
-          setIsMobileExpanded(false);
-          setMobileOpenId((current) =>
-            current && mobileExtraLabels.includes(current) ? null : current
-          );
-        }
-      },
-      { threshold: 0 }
-    );
-
-    observer.observe(extraWrapperNode);
-    return () => observer.disconnect();
-  }, [isMobileExpanded, mobileExtraLabels]);
+  };
 
   return (
     <>
       <div className="flex flex-col gap-4 md:hidden">
-        <div className="grid grid-cols-1 gap-2">
-          {mobileButtonLabels.map((label, index) => {
-            const isOpen = mobileOpenId === label;
-            const panelId = `mobile-moment-panel-${index}`;
-            const details = detailsByLabel[label] ?? {
-              signal: "Moment signal details for this selection.",
-              emotion: "Moment emotion details for this selection.",
-              description:
-                "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
-            };
-
-            return (
-              <div
-                key={label}
-                ref={(node) => {
-                  mobileItemRefs.current[label] = node;
-                }}
-                className="overflow-hidden rounded-lg bg-white"
-              >
+        <div className="flex items-center justify-center gap-2">
+          <button
+            type="button"
+            onClick={() => moveActiveMoment("left")}
+            disabled={focusedMobileIndex <= 0}
+            aria-label="Scroll moments left"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <span aria-hidden="true" className="text-lg leading-none">
+              ←
+            </span>
+          </button>
+          <button
+            type="button"
+            onClick={() => moveActiveMoment("right")}
+            disabled={focusedMobileIndex === -1 || focusedMobileIndex >= labels.length - 1}
+            aria-label="Scroll moments right"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-full border border-slate-300 bg-white text-slate-700 disabled:cursor-not-allowed disabled:opacity-40"
+          >
+            <span aria-hidden="true" className="text-lg leading-none">
+              →
+            </span>
+          </button>
+        </div>
+        <div
+          ref={mobileCarouselRef}
+          className="w-full overflow-x-auto pb-1 [scrollbar-width:none] [-ms-overflow-style:none] [&::-webkit-scrollbar]:hidden"
+        >
+          <div className="flex w-max min-w-full snap-x snap-mandatory gap-2 px-2">
+            {labels.map((label) => {
+              const isActive = mobileActiveId === label;
+              return (
                 <button
+                  key={label}
                   type="button"
-                  aria-expanded={isOpen}
-                  aria-controls={panelId}
-                  onClick={() => setMobileOpenId((current) => (current === label ? null : label))}
-                  className="flex w-full flex-col px-5 py-4 text-left text-sm font-medium text-slate-900"
+                  ref={(node) => {
+                    mobileButtonRefs.current[label] = node;
+                  }}
+                  onClick={() => {
+                    if (mobileActiveId === label) {
+                      setMobileActiveId(null);
+                      focusMobileMoment(label);
+                      return;
+                    }
+                    setMobileActiveId(label);
+                    focusMobileMoment(label);
+                  }}
+                  className={`w-[min(calc(100vw-5rem),21rem)] shrink-0 snap-center overflow-hidden rounded-lg border px-4 py-3 text-left transition ${
+                    isActive
+                      ? "border-[#1D26FF] bg-[#1D26FF] text-white shadow-[0_10px_24px_rgba(29,38,255,0.28)]"
+                      : "border-slate-200 bg-white text-slate-900"
+                  }`}
+                  aria-pressed={isActive}
                 >
                   <span className="flex items-center gap-3">
-                    <PlusMinusIcon isOpen={isOpen} />
-                    <h3 className="m-0 font-heading text-left text-base font-book leading-6 text-slate-900">
+                    <PlusMinusIcon isOpen={isActive} />
+                    <span className="font-heading text-base font-book leading-6 break-words">
                       {toTitleCase(label)}
-                    </h3>
+                    </span>
                   </span>
                 </button>
-
-                <AnimatePresence initial={false}>
-                  {isOpen ? (
-                    <motion.div
-                      id={panelId}
-                      key={panelId}
-                      initial={{ height: 0, opacity: 0 }}
-                      animate={{ height: "auto", opacity: 1 }}
-                      exit={{ height: 0, opacity: 0 }}
-                      transition={{
-                        duration: reducedMotion ? 0.12 : 0.22,
-                        ease: "easeOut"
-                      }}
-                      className="overflow-hidden border-t border-[var(--color-lightGrey)] bg-white"
-                    >
-                      <div className="space-y-2 px-5 pb-4 pt-3 text-left">
-                        <p className="text-sm text-slate-900">
-                          <span className="font-medium text-slate-700">Signal: </span>
-                          {details.signal}
-                        </p>
-                        <p className="text-sm text-slate-900">
-                          <span className="font-medium text-slate-700">Emotion: </span>
-                          {details.emotion}
-                        </p>
-                        <p className="text-sm text-slate-900">
-                          <span className="font-medium text-slate-700">Description: </span>
-                          {details.description}
-                        </p>
-                      </div>
-                    </motion.div>
-                  ) : null}
-                </AnimatePresence>
-              </div>
-            );
-          })}
-          {mobileExtraLabels.length > 0 ? (
-            <button
-              type="button"
-              aria-expanded={isMobileExpanded}
-              onClick={() => setIsMobileExpanded((current) => !current)}
-              className="w-full rounded-lg border border-slate-300 bg-white px-4 py-3 text-left text-base font-medium text-slate-700 shadow-[0_6px_16px_rgba(15,23,42,0.08)]"
-            >
-              <span className="flex items-center justify-between">
-                <span>{isMobileExpanded ? "Show less" : "And more"}</span>
-                <span aria-hidden="true" className="text-slate-500">
-                  ...
-                </span>
-              </span>
-            </button>
-          ) : null}
-
-          <AnimatePresence initial={false}>
-            {isMobileExpanded ? (
-              <motion.div
-                ref={mobileExtraWrapperRef}
-                initial={{ height: 0, opacity: 0 }}
-                animate={{ height: "auto", opacity: 1 }}
-                exit={{ height: 0, opacity: 0 }}
-                transition={{
-                  duration: reducedMotion ? 0.12 : 0.22,
-                  ease: "easeOut"
-                }}
-                className="overflow-hidden"
-              >
-                <div className="grid grid-cols-1 gap-2 pt-1">
-                  {mobileExtraLabels.map((label, index) => {
-                    const isOpen = mobileOpenId === label;
-                    const panelId = `mobile-moment-panel-extra-${index}`;
-                    const details = detailsByLabel[label] ?? {
-                      signal: "Moment signal details for this selection.",
-                      emotion: "Moment emotion details for this selection.",
-                      description:
-                        "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
-                    };
-
-                    return (
-                      <div
-                        key={label}
-                        ref={(node) => {
-                          mobileItemRefs.current[label] = node;
-                        }}
-                        className="overflow-hidden rounded-lg bg-white"
-                      >
-                        <button
-                          type="button"
-                          aria-expanded={isOpen}
-                          aria-controls={panelId}
-                          onClick={() => setMobileOpenId((current) => (current === label ? null : label))}
-                          className="flex w-full flex-col px-5 py-4 text-left text-sm font-medium text-slate-900"
-                        >
-                          <span className="flex items-center gap-3">
-                            <PlusMinusIcon isOpen={isOpen} />
-                            <h3 className="m-0 font-heading text-left text-base font-book leading-6 text-slate-900">
-                              {toTitleCase(label)}
-                            </h3>
-                          </span>
-                        </button>
-
-                        <AnimatePresence initial={false}>
-                          {isOpen ? (
-                            <motion.div
-                              id={panelId}
-                              key={panelId}
-                              initial={{ height: 0, opacity: 0 }}
-                              animate={{ height: "auto", opacity: 1 }}
-                              exit={{ height: 0, opacity: 0 }}
-                              transition={{
-                                duration: reducedMotion ? 0.12 : 0.22,
-                                ease: "easeOut"
-                              }}
-                              className="overflow-hidden border-t border-[var(--color-lightGrey)] bg-white"
-                            >
-                              <div className="space-y-2 px-5 pb-4 pt-3 text-left">
-                                <p className="text-sm text-slate-900">
-                                  <span className="font-medium text-slate-700">Signal: </span>
-                                  {details.signal}
-                                </p>
-                                <p className="text-sm text-slate-900">
-                                  <span className="font-medium text-slate-700">Emotion: </span>
-                                  {details.emotion}
-                                </p>
-                                <p className="text-sm text-slate-900">
-                                  <span className="font-medium text-slate-700">Description: </span>
-                                  {details.description}
-                                </p>
-                              </div>
-                            </motion.div>
-                          ) : null}
-                        </AnimatePresence>
-                      </div>
-                    );
-                  })}
-                </div>
-              </motion.div>
-            ) : null}
-          </AnimatePresence>
+              );
+            })}
+          </div>
         </div>
+        <AnimatePresence initial={false}>
+          {mobileActiveId ? (
+            <motion.div
+              key={mobileActiveId}
+              initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: reducedMotion ? 0 : -6 }}
+              transition={{
+                duration: reducedMotion ? 0.12 : 0.2,
+                ease: "easeOut"
+              }}
+              className="overflow-hidden rounded-lg border border-[var(--color-lightGrey)] bg-white"
+            >
+              {(() => {
+                const details = detailsByLabel[mobileActiveId] ?? {
+                  signal: "Moment signal details for this selection.",
+                  emotion: "Moment emotion details for this selection.",
+                  description:
+                    "Moment description placeholder explaining how this in-game event connects your message to fan emotion."
+                };
+
+                return (
+                  <div className="space-y-2 px-5 pb-4 pt-3 text-left">
+                    <p className="text-sm text-slate-900">
+                      <span className="font-medium text-slate-700">Signal: </span>
+                      {details.signal}
+                    </p>
+                    <p className="text-sm text-slate-900">
+                      <span className="font-medium text-slate-700">Emotion: </span>
+                      {details.emotion}
+                    </p>
+                    <p className="text-sm text-slate-900">
+                      <span className="font-medium text-slate-700">Description: </span>
+                      {details.description}
+                    </p>
+                  </div>
+                );
+              })()}
+            </motion.div>
+          ) : null}
+        </AnimatePresence>
       </div>
 
       <div className="hidden flex-col gap-4 md:flex md:flex-row md:items-start md:gap-8">
