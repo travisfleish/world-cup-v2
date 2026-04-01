@@ -261,25 +261,26 @@ function FanCloudComparisonSection({
     });
   };
   const leftLabelClasses = [
-    "absolute left-3 top-3 z-20 max-w-[48%] rounded-full px-4 py-2 text-center text-[clamp(0.68rem,1.1vw,1rem)] font-semibold leading-tight md:left-5 md:top-5 md:max-w-[48%] transition-all duration-200",
+    "absolute left-3 top-3 z-20 max-w-[48%] rounded-full px-4 py-2 text-center text-[clamp(0.62rem,0.95vw,0.88rem)] font-heading font-medium leading-tight md:left-5 md:top-5 md:max-w-[48%] transition-all duration-200",
     isOtherViewDominant
       ? "bg-[#3240f5]/90 text-white ring-1 ring-[#d6e86f]/60 shadow-[0_10px_26px_rgba(50,64,245,0.28)] scale-[1.02]"
       : "bg-[#1D26FF]/12 text-white/55 ring-1 ring-white/15 saturate-75"
   ].join(" ");
   const rightLabelClasses = [
-    "absolute right-3 top-3 z-20 max-w-[48%] rounded-full px-4 py-2 text-center text-[clamp(0.68rem,1.1vw,1rem)] font-semibold leading-tight md:right-5 md:top-5 md:max-w-[48%] transition-all duration-200",
+    "absolute right-3 top-3 z-20 max-w-[48%] rounded-full px-4 py-2 text-center text-[clamp(0.62rem,0.95vw,0.88rem)] font-heading font-medium leading-tight md:right-5 md:top-5 md:max-w-[48%] transition-all duration-200",
     isGeniusViewDominant
       ? "bg-[#3240f5]/90 text-white ring-1 ring-[#d6e86f]/60 shadow-[0_10px_26px_rgba(50,64,245,0.28)] scale-[1.02]"
       : "bg-[#1D26FF]/12 text-white/55 ring-1 ring-white/15 saturate-75"
   ].join(" ");
   const activeImageFilter = "saturate(1.18) brightness(1.12) contrast(1.04)";
   const inactiveImageFilter = "saturate(0.55) brightness(0.72) contrast(0.94)";
-  const leftImageScale = 0.82;
-  const leftImageTranslateY = -6;
-  const rightImageScale = 0.88;
-  const rightImageTranslateY = -4;
-  const leftImageFilter = isOtherViewDominant ? inactiveImageFilter : activeImageFilter;
-  const rightImageFilter = isGeniusViewDominant ? inactiveImageFilter : activeImageFilter;
+  const leftImageScale = 1.24;
+  const leftImageTranslateY = 0;
+  const rightImageScale = 1.24;
+  const rightImageTranslateY = 0;
+  // Keep the Genius side visually readable at the neutral midpoint.
+  const leftImageFilter = sliderPercent > 50 ? activeImageFilter : inactiveImageFilter;
+  const rightImageFilter = sliderPercent <= 50 ? activeImageFilter : inactiveImageFilter;
 
   return (
     <section
@@ -298,13 +299,15 @@ function FanCloudComparisonSection({
         <div className="mt-8 md:mt-10">
           <div className="mx-auto grid w-full max-w-[1200px] gap-4 md:hidden">
             <article>
-              <p className="mb-2 px-1 text-center text-sm font-semibold leading-snug text-slate-900">{leftLabel}</p>
+              <p className="mb-2 px-1 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
+                {leftLabel}
+              </p>
               <div className="overflow-hidden rounded-2xl border border-[#3b5bd1]/50 bg-gradient-to-br from-[#151b36]/88 to-[#1b2950]/85 shadow-[0_14px_28px_rgba(15,23,42,0.2)] backdrop-blur-[2px]">
                 <div className="relative aspect-[16/9] w-full">
                   <img
                     src={leftImageSrc}
                     alt={leftLabel}
-                    className="pointer-events-none absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] select-none object-contain"
+                    className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
                   style={{
                     transform: `translateY(${leftImageTranslateY}px) scale(${leftImageScale})`,
                     transformOrigin: "center"
@@ -316,7 +319,7 @@ function FanCloudComparisonSection({
             </article>
 
             <article>
-              <p className="mb-2 px-1 text-center text-sm font-semibold leading-snug text-slate-900">
+              <p className="mb-2 px-1 text-center font-heading text-[0.84rem] font-medium leading-snug text-slate-900">
                 {rightLabel === "How Genius Sports sees World Cup fans." ? (
                   <>
                     <span className="block">How Genius Sports sees</span>
@@ -331,7 +334,7 @@ function FanCloudComparisonSection({
                 <img
                   src={rightImageSrc}
                   alt={rightLabel}
-                  className="pointer-events-none absolute inset-2 h-[calc(100%-1rem)] w-[calc(100%-1rem)] select-none object-contain"
+                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
                   style={{
                     transform: `translateY(${rightImageTranslateY}px) scale(${rightImageScale})`,
                     transformOrigin: "center"
@@ -362,33 +365,41 @@ function FanCloudComparisonSection({
               {rightLabel}
             </div>
             <div className="relative aspect-[16/9] min-h-[195px] w-full">
-              <div className="absolute inset-2 md:inset-3">
-                <img
-                  src={leftImageSrc}
-                  alt={leftLabel}
-                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
-                  style={{
-                    clipPath: `inset(0 ${100 - sliderPercent}% 0 0)`,
-                    transform: `translateY(${leftImageTranslateY}px) scale(${leftImageScale})`,
-                    transformOrigin: "center",
-                    filter: leftImageFilter,
-                    transition: "filter 220ms ease"
-                  }}
-                  draggable={false}
-                />
-                <img
-                  src={rightImageSrc}
-                  alt={rightLabel}
-                  className="pointer-events-none absolute inset-0 h-full w-full select-none object-contain"
-                  style={{
-                    clipPath: `inset(0 0 0 ${sliderPercent}%)`,
-                    transform: `translateY(${rightImageTranslateY}px) scale(${rightImageScale})`,
-                    transformOrigin: "center",
-                    filter: rightImageFilter,
-                    transition: "filter 220ms ease"
-                  }}
-                  draggable={false}
-                />
+              <div className="absolute inset-0 isolate">
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{ clipPath: `inset(0 ${100 - sliderPercent}% 0 0)` }}
+                >
+                  <img
+                    src={leftImageSrc}
+                    alt={leftLabel}
+                    className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+                    style={{
+                      transform: `translateY(${leftImageTranslateY}px) scale(${leftImageScale})`,
+                      transformOrigin: "center",
+                      filter: leftImageFilter,
+                      transition: "filter 220ms ease"
+                    }}
+                    draggable={false}
+                  />
+                </div>
+                <div
+                  className="absolute inset-0 overflow-hidden"
+                  style={{ clipPath: `inset(0 0 0 ${sliderPercent}%)` }}
+                >
+                  <img
+                    src={rightImageSrc}
+                    alt={rightLabel}
+                    className="pointer-events-none absolute inset-0 h-full w-full select-none object-cover"
+                    style={{
+                      transform: `translateY(${rightImageTranslateY}px) scale(${rightImageScale})`,
+                      transformOrigin: "center",
+                      filter: rightImageFilter,
+                      transition: "filter 220ms ease"
+                    }}
+                    draggable={false}
+                  />
+                </div>
               </div>
 
               {showHelperHint ? (

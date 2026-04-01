@@ -8,99 +8,6 @@ type Step3CreativeVizProps = {
   data: MarchMadnessMomentsContent["creativeAndChannel"]["creativeViz"];
 };
 
-type MessageCardProps = {
-  cardTitle: string;
-  imageSrc?: string;
-  lead: string;
-  body: string;
-  enableTyping: boolean;
-  instantText: boolean;
-  accentTop?: boolean;
-};
-
-function useTypedCopy(lead: string, body: string, enableTyping: boolean, instantText: boolean) {
-  const fullText = `${lead} ${body}`;
-  const hasStartedTypingRef = useRef(instantText);
-  const [visibleChars, setVisibleChars] = useState(instantText ? fullText.length : 0);
-
-  useEffect(() => {
-    if (instantText) {
-      setVisibleChars(fullText.length);
-      return;
-    }
-
-    if (!enableTyping) {
-      if (!hasStartedTypingRef.current) {
-        setVisibleChars(0);
-      }
-      return;
-    }
-
-    hasStartedTypingRef.current = true;
-    setVisibleChars(0);
-    const intervalId = window.setInterval(() => {
-      setVisibleChars((current) => {
-        if (current >= fullText.length) {
-          window.clearInterval(intervalId);
-          return fullText.length;
-        }
-
-        return current + 1;
-      });
-    }, 30);
-
-    return () => window.clearInterval(intervalId);
-  }, [enableTyping, fullText, instantText]);
-
-  const leadChars = Math.min(visibleChars, lead.length);
-  const bodyChars = Math.max(visibleChars - lead.length - 1, 0);
-
-  return {
-    visibleLead: lead.slice(0, leadChars),
-    visibleBody: body.slice(0, bodyChars)
-  };
-}
-
-function MessageCard({
-  cardTitle,
-  imageSrc,
-  lead,
-  body,
-  enableTyping,
-  instantText,
-  accentTop = false
-}: MessageCardProps) {
-  if (imageSrc) {
-    return (
-      <div className="flex h-full items-start justify-center pt-1">
-        <img
-          src={imageSrc}
-          alt={cardTitle}
-          className="block h-auto w-full max-w-[18rem] sm:max-w-[22rem] md:max-w-[36rem]"
-          loading="lazy"
-          draggable={false}
-        />
-      </div>
-    );
-  }
-
-  const { visibleLead, visibleBody } = useTypedCopy(lead, body, enableTyping, instantText);
-
-  return (
-    <div className="flex h-full flex-col">
-      <article
-        className={`brand-card flex flex-1 flex-col bg-white ${
-          accentTop ? "border-emerald-200 border-t-[3px]" : "border-slate-300"
-        }`}
-      >
-        <h3 className="text-center text-lg font-medium tracking-wide text-slate-900">{cardTitle}</h3>
-        <p className="mt-4 min-h-[1.25rem] text-base font-medium text-slate-900">{visibleLead}</p>
-        <p className="mt-2 min-h-[5.25rem] text-base leading-relaxed text-slate-700">{visibleBody}</p>
-      </article>
-    </div>
-  );
-}
-
 function Step3CreativeViz({ data }: Step3CreativeVizProps) {
   const reducedMotion = useReducedMotionSafe();
   const vizRef = useRef<HTMLDivElement | null>(null);
@@ -109,11 +16,9 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
   const connectorStartDelayDesktop = reducedMotion ? 0 : 0.25;
   const singleCardFadeDelayDesktop = reducedMotion ? 0 : 0.55;
   const singleCardFadeDelayMobile = reducedMotion ? 0 : 0.42;
-  const typingStartDelayMs = reducedMotion ? 0 : 650;
   const [isBracketComplete, setIsBracketComplete] = useState(false);
   const [isMobileViewport, setIsMobileViewport] = useState(false);
   const [hasStartedAnimation, setHasStartedAnimation] = useState(reducedMotion);
-  const [areCardsReady, setAreCardsReady] = useState(reducedMotion);
   const handleBracketComplete = useCallback(() => {
     if (typeof window === "undefined" || reducedMotion) {
       setIsBracketComplete(true);
@@ -129,7 +34,6 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
     : reducedMotion
       ? true
       : isBracketComplete;
-  const enableTyping = areCardsReady && !reducedMotion && !isMobileViewport;
 
   useEffect(() => {
     if (typeof window === "undefined") return;
@@ -147,24 +51,6 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
       setHasStartedAnimation(true);
     }
   }, [hasEnteredViewport, hasStartedAnimation]);
-
-  useEffect(() => {
-    if (reducedMotion) {
-      setAreCardsReady(true);
-      return;
-    }
-
-    if (!revealCreativeFlow) {
-      setAreCardsReady(false);
-      return;
-    }
-
-    const readyTimer = window.setTimeout(() => {
-      setAreCardsReady(true);
-    }, singleCardFadeDelayDesktop * 1000 + typingStartDelayMs);
-
-    return () => window.clearTimeout(readyTimer);
-  }, [reducedMotion, revealCreativeFlow, singleCardFadeDelayDesktop, typingStartDelayMs]);
 
   return (
     <motion.div
@@ -223,43 +109,74 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
         {!revealCreativeFlow && (
           <div className="mt-0 md:hidden -mt-px h-[34rem]" aria-hidden="true" />
         )}
-        {revealCreativeFlow && <div className="mt-0 md:hidden -mt-px">
-          <div className="flex flex-col items-center pt-2">
-            <motion.div
-              className="h-12 w-px bg-amber-400"
-              initial={{ scaleY: reducedMotion ? 1 : 0 }}
-              animate={{ scaleY: 1 }}
-              transition={{
-                duration: connectorDrawDurationDesktop,
-                delay: connectorStartDelayDesktop,
-                ease: "easeInOut"
-              }}
-              style={{ transformOrigin: "top" }}
-            />
-            <motion.div
-              className="mt-3 w-full max-w-[36rem]"
-              initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{
-                duration: reducedMotion ? 0.1 : 0.3,
-                ease: "easeOut",
-                delay: singleCardFadeDelayMobile
-              }}
-            >
-              <MessageCard
-                cardTitle={data.leftCardTitle}
-                imageSrc={data.leftCardImageSrc}
-                lead={data.leftLead}
-                body={data.leftBody}
-                enableTyping={enableTyping}
-                instantText={true}
-                accentTop={true}
+        {revealCreativeFlow && (
+          <div className="mt-0 md:hidden -mt-px">
+            <div className="flex flex-col items-center pt-2">
+              <motion.div
+                className="h-12 w-px bg-amber-400"
+                initial={{ scaleY: reducedMotion ? 1 : 0 }}
+                animate={{ scaleY: 1 }}
+                transition={{
+                  duration: connectorDrawDurationDesktop,
+                  delay: connectorStartDelayDesktop,
+                  ease: "easeInOut"
+                }}
+                style={{ transformOrigin: "top" }}
               />
-            </motion.div>
+              <motion.div
+                className="mt-3 grid w-full max-w-[42rem] grid-cols-1 gap-8"
+                initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
+                animate={{ opacity: 1, y: 0 }}
+                transition={{
+                  duration: reducedMotion ? 0.1 : 0.3,
+                  ease: "easeOut",
+                  delay: singleCardFadeDelayMobile
+                }}
+              >
+                <div className="mx-auto flex w-full max-w-[760px] flex-col items-center text-center">
+                  <img
+                    src="/genius-assets/media-science-logo.png"
+                    alt="MediaScience"
+                    className="h-auto w-full max-w-[220px]"
+                  />
+                  <div
+                    className="mt-6 w-full text-slate-900"
+                    style={{
+                      fontFamily:
+                        'ESKlarheitKurrentTRIAL, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+                      fontFeatureSettings: "normal",
+                      fontVariationSettings: "normal",
+                      fontSize: "30px",
+                      letterSpacing: "-0.225px",
+                      lineHeight: "42px"
+                    }}
+                  >
+                    <p>
+                      <span className="text-[#8DB12D]">Surprise</span>, intensity, and{" "}
+                      <span className="text-[#8DB12D]">game outcome</span> meaningfully influence memory and ad effectiveness during
+                      live sports viewing.
+                    </p>
+                    <p className="mt-6">
+                      Brand recall was <span className="text-[#8DB12D]">2x higher</span> following moments of
+                      &nbsp;&lsquo;surprise&rsquo; compared with &nbsp;&lsquo;expected&rsquo; moments.
+                    </p>
+                  </div>
+                </div>
+                <div className="mx-auto w-full max-w-[700px]">
+                  <img
+                    src={data.leftCardImageSrc}
+                    alt={data.leftCardTitle}
+                    className="block h-auto w-full"
+                    loading="lazy"
+                    draggable={false}
+                  />
+                </div>
+              </motion.div>
+            </div>
           </div>
-        </div>}
+        )}
 
-        <div className="mt-0 hidden md:block -mt-px min-h-[21rem]">
+        <div className="mt-0 hidden md:block -mt-px min-h-[28rem]">
           <div className="relative mx-auto h-16 w-full max-w-5xl" aria-hidden="true">
             <svg viewBox="0 0 100 64" className="h-full w-full">
               <motion.path
@@ -279,9 +196,9 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
               />
             </svg>
           </div>
-          <div className="mx-auto mt-1 w-full max-w-[36rem]">
+          <div className="mx-auto mt-1 w-full max-w-6xl">
             <motion.div
-              className="mt-3"
+              className="mt-3 grid grid-cols-1 items-center gap-10 lg:grid-cols-2 lg:gap-12"
               initial={{ opacity: 0, y: reducedMotion ? 0 : 8 }}
               animate={revealCreativeFlow ? { opacity: 1, y: 0 } : { opacity: 0, y: reducedMotion ? 0 : 8 }}
               transition={{
@@ -290,15 +207,44 @@ function Step3CreativeViz({ data }: Step3CreativeVizProps) {
                 delay: singleCardFadeDelayDesktop
               }}
             >
-              <MessageCard
-                cardTitle={data.leftCardTitle}
-                imageSrc={data.leftCardImageSrc}
-                lead={data.leftLead}
-                body={data.leftBody}
-                enableTyping={enableTyping}
-                instantText={reducedMotion}
-                accentTop={true}
-              />
+              <div className="mx-auto flex w-full max-w-[760px] flex-col items-center text-center lg:items-start lg:text-left">
+                <img
+                  src="/genius-assets/media-science-logo.png"
+                  alt="MediaScience"
+                  className="h-auto w-full max-w-[220px] md:max-w-[260px]"
+                />
+                <div
+                  className="mt-8 w-full text-slate-900 md:mt-10"
+                  style={{
+                    fontFamily:
+                      'ESKlarheitKurrentTRIAL, system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji"',
+                    fontFeatureSettings: "normal",
+                    fontVariationSettings: "normal",
+                    fontSize: "30px",
+                    letterSpacing: "-0.225px",
+                    lineHeight: "42px"
+                  }}
+                >
+                  <p>
+                    <span className="text-[#8DB12D]">Surprise</span>, intensity, and{" "}
+                    <span className="text-[#8DB12D]">game outcome</span> meaningfully influence memory and ad effectiveness during
+                    live sports viewing.
+                  </p>
+                  <p className="mt-6">
+                    Brand recall was <span className="text-[#8DB12D]">2x higher</span> following moments of
+                    &nbsp;&lsquo;surprise&rsquo; compared with &nbsp;&lsquo;expected&rsquo; moments.
+                  </p>
+                </div>
+              </div>
+              <div className="mx-auto w-full max-w-[700px]">
+                <img
+                  src={data.leftCardImageSrc}
+                  alt={data.leftCardTitle}
+                  className="block h-auto w-full"
+                  loading="lazy"
+                  draggable={false}
+                />
+              </div>
             </motion.div>
           </div>
         </div>

@@ -142,8 +142,8 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     headline: "No One Knows World Cup\nFans Better Than Genius Sports",
     leftLabel: "How other data and media partners see World Cup fans.",
     rightLabel: "How Genius Sports sees World Cup fans.",
-    leftImageSrc: "/girl2.png",
-    rightImageSrc: "/girl_full2.png",
+    leftImageSrc: "/slider_left.png",
+    rightImageSrc: "/slider_right.png",
     helperText: "Drag the slider to compare.",
     metricsEyebrow: "",
     metrics: [

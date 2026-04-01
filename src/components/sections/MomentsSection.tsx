@@ -12,7 +12,7 @@ type MomentsSectionProps = {
 const highlightedPhrases = ["Genius Moments", "Fan Graph"] as const;
 const proprietaryMomentLabels = new Set<string>();
 const momentDetailsByLabel: Record<string, { signal: string; emotion: string; description: string }> = {
-  "LEAD UP: TAILGATE/WATCH PARTY": {
+  "LEAD UP: TAILGATE/Watch Party": {
     signal: "Kick-off time",
     emotion: "Anticipation",
     description:

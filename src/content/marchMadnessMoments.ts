@@ -150,8 +150,8 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     headline: "No One Knows World Cup\nFans Better Than Genius Sports",
     leftLabel: "How other data and media partners see World Cup fans.",
     rightLabel: "How Genius Sports sees World Cup fans.",
-    leftImageSrc: "/girl2.png",
-    rightImageSrc: "/girl_full2.png",
+    leftImageSrc: "/slider_left.png",
+    rightImageSrc: "/slider_right.png",
     helperText: "Drag the slider to compare.",
     metricsEyebrow: "",
     metrics: [
@@ -213,7 +213,7 @@ export const marchMadnessMomentsContent: MarchMadnessMomentsContent = {
     introParagraph2:
       "Select the key in-game or tournament moments you want to align your brand with.",
     labels: [
-      "LEAD UP: TAILGATE/WATCH PARTY",
+      "LEAD UP: TAILGATE/Watch Party",
       "MATCHUPS: LINEUPS AND ANTHEMS",
       "SUPERSTITION: IN-GAME RITUALS",
       "DOWN TO THE WIRE: EXTRA TIME",

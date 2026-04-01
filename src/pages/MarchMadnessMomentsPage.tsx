@@ -3,7 +3,6 @@ import CreativeChannelSection from "../components/sections/CreativeChannelSectio
 import FanCloudComparisonSection from "../components/sections/FanCloudComparisonSection";
 import HeroSection from "../components/sections/HeroSection";
 import HowItWorksSection from "../components/sections/HowItWorksSection";
-import ScrollHowItWorksSection from "../components/sections/ScrollHowItWorksSection";
 import MomentsSection from "../components/sections/MomentsSection";
 import SectionNav from "../components/nav/SectionNav";
 import ProofBand from "../components/sections/ProofBand";
@@ -18,7 +17,7 @@ function MarchMadnessMomentsPage() {
         <div className="mx-auto flex w-full max-w-6xl flex-col gap-8">
           <SectionNav />
           <FanCloudComparisonSection {...content.fanCloudComparison} />
-          <ScrollHowItWorksSection />
+          <ProofBand {...content.proof} />
           <HowItWorksSection {...content.howItWorks} />
           <MomentsSection
             header={content.moments.header}
@@ -28,7 +27,6 @@ function MarchMadnessMomentsPage() {
           />
           <AudiencesSection {...content.audiences} />
           <CreativeChannelSection {...content.creativeAndChannel} />
-          <ProofBand {...content.proof} />
         </div>
       </div>
       <ContactCtaSection />
