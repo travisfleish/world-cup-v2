@@ -1,0 +1,16 @@
+<style><span data-mce-type="bookmark" style="display: inline-block; width: 0px; overflow: hidden; line-height: 0;" class="mce_SELRES_start">﻿</span><br />
+.section__outer .opacity-80 { opacity: 1 !important; } /* FIX: stop the section’s flex wrapper from “hugging” content on smaller widths */<br />
+.section__outer .flex.w-full.flex-col.items-start{  align-items: stretch !important;}<br />
+.section__outer .flex.w-full.flex-col.items-start > *{<br />
+  width: 100% !important;<br />
+}<br />
+/* optional: remove common mobile gutters if your theme adds them */<br />
+@media (max-width: 768px){<br />
+  .section__outer,<br />
+  .section__outer .container{<br />
+    padding-left: 0 !important;<br />
+    padding-right: 0 !important;<br />
+  }<br />
+}<br />
+</style>
+<div style="position: relative; width: 100%; height: 5800px; overflow: hidden; margin: 0; padding: 0;"><iframe style="display: block; width: 100%; height: 100%; border: 0; margin: 0; padding: 0; box-sizing: border-box;" title="March Madness 2026" src="https://world-cup-v2.vercel.app/" frameborder="0" scrolling="no" aria-label="World Cup"></iframe></div>

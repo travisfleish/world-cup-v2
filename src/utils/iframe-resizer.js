@@ -3,12 +3,24 @@
 // Usage: const stop = initIframeResizer({ parentOrigin: "https://www.geniussports.com", debug: true });
 // stop() // cleanup observers/event listeners
 
-const PARENT_ORIGIN = "https://www.geniussports.com"; // Must match the parent window origin exactly for secure postMessage checks.
+const DEFAULT_PARENT_ORIGIN = "https://www.geniussports.com";
+const LEGACY_PARENT_ORIGIN = "https://geniussports.com";
 
-export default function initIframeResizer({ parentOrigin = PARENT_ORIGIN, debug = false } = {}) {
-  if (!parentOrigin) {
-    throw new Error("initIframeResizer requires parentOrigin (exact origin string).");
+function getOrigin(url) {
+  if (!url) return null;
+  try {
+    return new URL(url).origin;
+  } catch {
+    return null;
   }
+}
+
+export default function initIframeResizer({ parentOrigin, debug = false } = {}) {
+  const inferredParentOrigin = getOrigin(document.referrer);
+  const resolvedParentOrigin = parentOrigin || inferredParentOrigin || DEFAULT_PARENT_ORIGIN;
+  const allowedOrigins = new Set(
+    [resolvedParentOrigin, DEFAULT_PARENT_ORIGIN, LEGACY_PARENT_ORIGIN].filter(Boolean)
+  );
 
   // TEMP_DEBUG_REMOVE: temporary logs for integration testing.
   const log = (...args) => {
@@ -47,7 +59,7 @@ export default function initIframeResizer({ parentOrigin = PARENT_ORIGIN, debug 
 
   function postResize(height) {
     try {
-      window.parent.postMessage({ type: "resize", height }, parentOrigin);
+      window.parent.postMessage({ type: "resize", height }, resolvedParentOrigin);
       log("posted height", height); // TEMP_DEBUG_REMOVE
     } catch (err) {
       log("postMessage error", err);
@@ -86,7 +98,7 @@ export default function initIframeResizer({ parentOrigin = PARENT_ORIGIN, debug 
 
   function onMessage(event) {
     try {
-      if (event.origin !== parentOrigin) return;
+      if (!allowedOrigins.has(event.origin)) return;
       if (!event.data || event.data.type !== "request-height") return;
 
       // Parent explicitly asked for current height.
